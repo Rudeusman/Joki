@@ -3693,7 +3693,25 @@ function settingsApply(){
   </div>
 </div>
 
+<!-- DEFAULT V2 UPGRADE SCREEN -->
+<div class="overlay hidden" id="screen-default-v2">
+  <div style="position:relative;width:min(460px,94vw);">
+    <div style="text-align:center;margin-bottom:14px;">
+      <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#e2e8f0,#cc2222,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;">🚀 UPGRADE: DEFAULT V2</div>
+      <div style="font-size:0.75rem;color:rgba(200,50,50,0.6);letter-spacing:3px;">BRUTAL VOLLEY · TOMBAK KENDALI · PASIF PERISAI</div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:14px;">
+      <canvas id="dv2-preview-canvas" width="160" height="130" style="background:rgba(4,2,13,0.95);border:2px solid rgba(180,30,30,0.5);border-radius:14px;"></canvas>
+    </div>
+    <div style="font-size:0.7rem;color:rgba(255,255,255,0.25);letter-spacing:3px;margin-bottom:8px;text-align:center;">SYARAT UPGRADE</div>
+    <div id="dv2-quest-list" style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;max-height:32vh;overflow-y:auto;padding-right:2px;"></div>
+    <div id="dv2-actions" style="display:flex;flex-direction:column;gap:8px;align-items:center;"></div>
+    <button class="btn btn-ghost" style="margin-top:10px;width:100%;" onclick="showScreen('v2-menu')">← Kembali</button>
+  </div>
+</div>
+
 <!-- SHOP -->
+
 <div class="overlay hidden" id="screen-shop">
   <canvas id="shop-stars" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.45;"></canvas>
   <div style="position:relative;z-index:1;display:flex;flex-direction:column;height:100%;width:100%;">
@@ -3790,6 +3808,7 @@ function settingsApply(){
     <div style="display:flex;gap:8px;padding:10px 16px 0;flex-shrink:0;">
       <button id="evo-tab-ego" onclick="switchEvoTab('ego')" style="flex:1;padding:10px 0;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:1px;cursor:pointer;background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff;box-shadow:0 3px 12px rgba(124,58,237,0.4);">💜 EGO</button>
       <button id="evo-tab-rinnegan" onclick="switchEvoTab('rinnegan')" style="flex:1;padding:10px 0;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:1px;cursor:pointer;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.1);">👁️ RINNEGAN</button>
+      <button id="evo-tab-ud" onclick="switchEvoTab('ud')" style="flex:1;padding:10px 0;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:1px;cursor:pointer;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.1);">⬛ DEFAULT</button>
     </div>
     <!-- EGO PANEL -->
     <div id="evo-panel-ego" class="evo-body">
@@ -3820,6 +3839,16 @@ function settingsApply(){
       <div class="evo-cheat-row">
         <input type="text" id="rn-evo-cheat" placeholder="Kode rahasia Rinnegan..." class="evo-cheat-input">
         <button class="evo-action-btn evo-btn-ghost" id="btn-rn-evo-cheat">KIRIM</button>
+      </div>
+    </div>
+
+    <!-- ULTIMATE DEFAULT EVO PANEL -->
+    <div id="evo-panel-ud" class="evo-body" style="display:none;">
+      <div class="evo-section-label">📋 QUEST EVOLUSI DEFAULT → ULTIMATE DEFAULT</div>
+      <div class="evo-status-badge" id="ud-evo-status-badge"></div>
+      <div id="ud-evo-list" class="evo-quest-list"></div>
+      <div class="evo-action-col">
+        <button class="evo-action-btn evo-btn-done" id="btn-ud-evo-complete" style="display:none;">⬛ EVOLVE — ULTIMATE DEFAULT!</button>
       </div>
     </div>
     <button class="shop-back" onclick="showScreen('menu')">← Kembali ke Menu</button>
@@ -4374,7 +4403,9 @@ function settingsApply(){
    SKIN & ITEM DATA
    ============================================================ */
 const SKINS = {
-  'default':      { name:'🚀 Default',       price:0,      desc:'Pesawat standar.',                              lives:1 },
+  'default':          { name:'🚀 Default',          price:0, desc:'Pesawat standar. [Bisa dievokan ke Ultimate Default di Lab Evo] [Bisa diupgrade ke Default V2 di menu V2]', lives:1 },
+  'ultimate_default': { name:'⬛ Ultimate Default',  price:0, desc:'EPIC EVO. 2 Nyawa. Evolusi Default sejati! S1 REPULSE: Tolak semua meteor ke dinding (CD 15s). S2 CRUMBLE: Hancurkan semua meteor dalam radius besar (CD 25s). PASIF: Gudoudama 4 bola putih mengikutimu — menghancurkan meteor yang menyentuhnya. [Didapat dari Lab Evo → tab DEFAULT]', lives:2, epic:true, exclusive:true, evoOnly:true },
+  'default_v2':       { name:'🚀 Default V2',        price:0, desc:'EPIC+ EXCLUSIVE. 3 Nyawa. Default yang telah dimodifikasi! S1 BRUTAL VOLLEY: Tembakkan 8 peluru brutal ke arah depan sekaligus (CD 35s). S2 SPEAR THROW: Lempar 2 tombak dark red — nancap di dinding → menembaki semua meteor 5 detik, nancap di meteor → kendalikan meteor itu menembaki meteor lain 5 detik (CD 30s). PASIF: Setiap 25 detik ada 10% chance dapat Perisai gratis. [Didapat dari menu V2]', lives:3, epic:true, exclusive:true, epicPlus:true },
   'noob':         { name:'🛸 Noob',          price:0,      desc:'COMMON. 1 Nyawa. Tampak biasa... tapi menyimpan rahasia gelap. Tekan tombol 💻 saat bermain untuk membuka HACKER PANEL — kontrol penuh atas semesta permainan!', lives:1, noobSkin:true, exclusive:true },
   'omni_adhack':  { name:'👑 Omni Ad-Hack',  price:0,      desc:'??? Wujud yang tersembunyi di balik kegelapan.', lives:3, exclusive:true, omniSkin:true },
   red:          { name:'🔴 Merah',          price:500,    desc:'Warna merah.',                                  lives:1 },
@@ -4433,6 +4464,7 @@ const SKINS = {
   portal:        { name:'🌀 Portal',            price:30000,  desc:'ULTRA LEGENDARY. 2 Nyawa. Penguasa Dimensi Portal! S1 PORTAL DISMISS: Saat meteor mendekat, aktifkan untuk teleport meteor itu ke dimensi lain — langsung hancur + koin (CD 8s). S2 PORTAL DASH: Pilih titik di layar, player teleport langsung ke sana dengan efek portal biru spektakuler (CD 12s). S3 BLINK STORM: Berpindah-pindah acak super cepat 5 detik — setiap meteor di dekat player langsung lenyap! Setelah 5 detik kembali ke posisi asal. Aura portal biru berputar + ring dimensi. SANGAT WORTH IT di harga 30.000!', lives:2, limited:true, ultra:true },
   phoenix:       { name:'🐦‍🔥 Phoenix',          price:88000,  desc:'HIGH LEGENDARY • ULTRA. 1 Nyawa. Burung Api Abadi yang tak pernah benar-benar mati! S1 FIRE TORNADO: Puting beliung api menyapu seluruh map dari bawah ke atas — hancurkan semua meteor di jalurnya (CD 10s). S2 FLAME SURGE: Semburan api meledak dari tubuh Phoenix ke semua arah — bakar semua meteor dalam radius besar (CD 15s). S3 INFERNO RAIN: Lempar puluhan bola api ke seluruh penjuru map selama 5 detik — tiap meteor yang kena +koin +skor besar! (CD 20s). PASSIVE PHOENIX REBIRTH: Charging 2 menit dari awal game — setelah 2 menit, saat mati langsung BANGKIT dengan aura api, kebal 4 detik, semua meteor terbakar! Lalu timer reset & charging ulang. Mati sebelum 2 menit = game over!', lives:1, limited:true, highLegendary:true },
   sapphire_phoenix: { name:'💎🔥 Sapphire Phoenix', price:0, desc:'HIGH LEGENDARY FUSION • 2 Nyawa. Phoenix kristal biru yang lahir dari api safir murni! S1 SAPPHIRE LANCE: Tombak api biru menyapu kolom penuh (CD 12s). S2 CRYSTAL ORB: 8 bola api biru mengelilingi player, tap lempar 1 per tap +2 koin/meteor, auto-hancurkan meteor yang menyentuh player. S3 BLUE INFERNO: 15 bola api biru raksasa auto-aim, 1 bola per meteor, koin x3 (CD 25s). PASSIVE CRYSTAL REBIRTH: Charging 90 detik — saat nyawa habis bangkit dengan aura api biru hancurkan semua meteor, kebal 5 detik, +100 koin!', lives:2, limited:true, highLegendary:true, isFusion:true },
+  celestial_default: { name:'🌌 Celestial Default', price:0, desc:'HIGH LEGENDARY FUSION. 4 Nyawa. Puncak evolusi Default — gabungan Ultimate Default & Default V2! S1 CELESTIAL BURST: Hancurkan semua meteor di map sekaligus — Streak: Shield→Double Shield→+1 Nyawa→+250 Skor→+350 Skor (max 5x per game, CD 50s). S2 HYPNO WAVE: Gelombang hipnotis ke seluruh map — meteor jadi teman, hancurkan meteor lain selama 7 detik, +50 koin per meteor kena gelombang, +50 skor per kill. PASIF: Tiap 35 detik ada 5% chance Triple Shield (3 ring warna beda). Didapat dari Fusion Lab (Ultimate Default + Default V2).', lives:4, highLegendary:true, isFusion:true, limited:true },
   // === FUSION SKINS ===
   ruby:           { name:'💎🔴 Ruby',          price:0,  desc:'EPIC FUSION. 4 Nyawa. Permata merah yang lahir dari kristal dan api! S1 RUBY BURST: Tembakkan 3 jalur peluru merah beruntun ke depan selama 10 detik (CD 20s). S2 RUBY SHIELD: Shield kristal merah tahan meteor selama 15 detik — 20% chance saat shield hancur mendapat +100 Fragment & +500 Koin sekaligus! (CD 30s). Didapat dari Fusion Lab (💎 Diamond + 🔴 Merah).', lives:4, fusion:true, epicFusion:true },
   crimson_violet: { name:'💥 Crimson Violet', price:0, desc:'FUSION BASIC. 2 Nyawa. Kapal fusion bertanduk dengan aura merah-ungu membakar! Laser Crimson Violet: tembak 5 laser beruntun warna merah-ungu bergantian, CD 10s. Didapat dari Fusion Lab (🔴 Merah + 💜 Violet).', lives:2, fusion:true, fusionBasic:true },
@@ -4467,6 +4499,7 @@ const ITEMS = [
   { id:'spear_basic',  name:'🗡️ Tombak Biasa',  price:0,    desc:'Lemparkan 3 tombak dasar ke atas sekaligus! Bonus dari Gacha Skill Lembing Balik. Sekali pakai.', rare:true, gachaBonus:true },
   { id:'key_lab',      name:'🗝️ Key Lab',        price:0,    desc:'Kunci rahasia Fusion Lab. PERMANENT — tidak bisa ditumpuk lebih dari 1. Syarat wajib untuk membuka Fusion skin Legendary & Mythical. Dapatkan dari passive Samurai (5% saat kena meteor). Kunci ini tidak akan hilang meski digunakan untuk fusion.', rare:true },
   { id:'checkpoint',   name:'📍 CheckPoint',    price:0,    desc:'Item OP! Saat kamu kalah, bisa lanjut dari level terakhir. Harus DIAKTIFKAN di Inventory sebelum main. Hanya 1 per game. Tidak dijual di shop — dapatkan dari kode rahasia, Daily Reward hari 5, atau Quest.', rare:true, checkpointItem:true },
+  { id:'ancient_fusion', name:'🏺 Ancient Fusion', price:0, desc:'PERMANENT. Item legendaris yang hanya bisa didapat sekali seumur hidup! Bukti penguasaan penuh atas dunia Meteor Rush — kalahkan boss, kuasai fusion, temukan rahasia tersembunyi. Fungsi khusus akan tersedia di masa mendatang.', rare:true, permanent:true, ancientItem:true },
 ];
 
 // === POWER-UP IN-GAME (v4.5) - muncul di lapangan ===
@@ -4501,6 +4534,10 @@ save = {
   instingV2Unlocked:false,
   alienV2Quest:{ started:false, ufoRideCount:0, surviveCount:0, paid:false, coinPaid:false, completed:false },
   alienV2Unlocked:false,
+  defaultV2Quest:{ started:false, reachedLv3:false, surviveUDLv2:false, paid:false, completed:false },
+  defaultV2Unlocked:false,
+  ancientFusion:{ meteorKills:0, easterEggFound:false, completed:false },
+  celestialQuest:{ meteorCount:0, dv2Minutes:0, udMinutes:0, reachedLv4NoHit:false, paid:false },
   chipMission:{ started:false, skillKills:0, completed:false },
   chipAndroidOwned:false,
   bossAndroidBoomActive: false,
@@ -4525,7 +4562,7 @@ save = {
     questLastComplete: 0, // timestamp selesai quest ke-3 (untuk cooldown 2 jam)
   },
 };
-function loadData(){ try{ const r=localStorage.getItem('mrSave2'); if(r){ const d=JSON.parse(r); save={...save,...d}; if(!save.egoQuest) save.egoQuest={started:false,useCount:0,ultraCount:0,meteorSessions:0,sessionKills:0,paid:false}; if(!save.gachaSkills) save.gachaSkills={}; if(save.susanooLevel===undefined) save.susanooLevel=0; if(save.susanooKills===undefined) save.susanooKills=0; if(!save.gachaQuests) save.gachaQuests={}; if(!save.instingV2Quest) save.instingV2Quest={started:false,dodgeCount:0,paid:false,hasChip:false,completed:false}; if(save.instingV2Unlocked===undefined) save.instingV2Unlocked=false; if(!save.alienV2Quest) save.alienV2Quest={started:false,ufoRideCount:0,surviveCount:0,paid:false,coinPaid:false,completed:false}; if(save.alienV2Unlocked===undefined) save.alienV2Unlocked=false; if(!save.chipMission) save.chipMission={started:false,skillKills:0,completed:false}; if(save.chipAndroidOwned===undefined) save.chipAndroidOwned=false; if(!save.inventory.items) save.inventory.items=[]; if(save.bossAndroidBoomActive===undefined) save.bossAndroidBoomActive=false; if(save.bossHighest===undefined) save.bossHighest=0; if(save.ultimateEgoOwned===undefined) save.ultimateEgoOwned=false; if(save.hsMilestoneReached===undefined) save.hsMilestoneReached=0; if(!save.dailyReward) save.dailyReward={lastClaimDate:"",streak:0}; if(save.fragments===undefined) save.fragments=0; if(!save.kosmetik) save.kosmetik={owned:[],active:{}}; setTimeout(applyKosmetik,100);
+function loadData(){ try{ const r=localStorage.getItem('mrSave2'); if(r){ const d=JSON.parse(r); save={...save,...d}; if(!save.egoQuest) save.egoQuest={started:false,useCount:0,ultraCount:0,meteorSessions:0,sessionKills:0,paid:false}; if(!save.gachaSkills) save.gachaSkills={}; if(save.susanooLevel===undefined) save.susanooLevel=0; if(save.susanooKills===undefined) save.susanooKills=0; if(!save.gachaQuests) save.gachaQuests={}; if(!save.instingV2Quest) save.instingV2Quest={started:false,dodgeCount:0,paid:false,hasChip:false,completed:false}; if(save.instingV2Unlocked===undefined) save.instingV2Unlocked=false; if(!save.alienV2Quest) save.alienV2Quest={started:false,ufoRideCount:0,surviveCount:0,paid:false,coinPaid:false,completed:false}; if(save.alienV2Unlocked===undefined) save.alienV2Unlocked=false; if(!save.defaultV2Quest) save.defaultV2Quest={started:false,reachedLv3:false,surviveUDLv2:false,paid:false,completed:false}; if(save.defaultV2Unlocked===undefined) save.defaultV2Unlocked=false; if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false}; if(save.ancientFusion.completed&&!save.inventory.items.includes("ancient_fusion")) save.inventory.items.push("ancient_fusion"); if(!save.celestialQuest) save.celestialQuest={meteorCount:0,dv2Minutes:0,udMinutes:0,reachedLv4NoHit:false}; if(!save.chipMission) save.chipMission={started:false,skillKills:0,completed:false}; if(save.chipAndroidOwned===undefined) save.chipAndroidOwned=false; if(!save.inventory.items) save.inventory.items=[]; if(save.bossAndroidBoomActive===undefined) save.bossAndroidBoomActive=false; if(save.bossHighest===undefined) save.bossHighest=0; if(save.ultimateEgoOwned===undefined) save.ultimateEgoOwned=false; if(save.hsMilestoneReached===undefined) save.hsMilestoneReached=0; if(!save.dailyReward) save.dailyReward={lastClaimDate:"",streak:0}; if(save.fragments===undefined) save.fragments=0; if(!save.kosmetik) save.kosmetik={owned:[],active:{}}; setTimeout(applyKosmetik,100);
         if(save.rinneganEvolved===undefined) save.rinneganEvolved=false;
         if(save.trueRinneganOwned===undefined) save.trueRinneganOwned=false;
         if(!save.rinneganQuest) save.rinneganQuest={started:false,minutesPlayed:0,meteorKills:0,bossPlays:0,paid:false,coinPaid:false};
@@ -4861,9 +4898,28 @@ function resetCDs(){
   CD.rootBurst=0;      CDMax.rootBurst=20*60;        // Life S1: Root Burst 20s
   CD.pollenBurst=0;    CDMax.pollenBurst=28*60;      // Life S2: Pollen Burst 28s
   CD.witheredBloom=0;  CDMax.witheredBloom=35*60;    // Life Special: Withered Bloom 35s
+  // === ULTIMATE DEFAULT EPIC EVO ===
+  CD.udRepulse=0;      CDMax.udRepulse=20*60;        // S1: Repulse 20s
+  CD.udCrumble=0;      CDMax.udCrumble=25*60;        // S2: Crumble Wave 25s
+  udRepulseActive=false; udRepulseTimer=0;
+  udCrumbleWaves=[];
+  udGudoudamaBalls=[];
+  // === DEFAULT V2 ===
+  CD.dv2Volley=0;      CDMax.dv2Volley=35*60;        // S1: Brutal Volley 35s
+  CD.dv2Spear=0;       CDMax.dv2Spear=30*60;         // S2: Spear Throw 30s
+  dv2Spears=[]; dv2SpearActive=false; dv2SpearTimer=0; dv2PassiveTimer=0;
+  // === CELESTIAL DEFAULT ===
+  CD.cdBurst=0;        CDMax.cdBurst=50*60;          // S1: Celestial Burst 50s
+  CD.cdHypno=0;        CDMax.cdHypno=40*60;          // S2: Hypno Wave 40s
+  cdBurstUsed=0; cdStreakStage=0; cdStreakNewLifeTimer=0;
+  cdHypnoMeteors=[]; cdPassiveTimer=0; cdTripleShieldActive=false;
 }
 
 // Skill states
+// === ULTIMATE DEFAULT STATE ===
+let udRepulseActive=false, udRepulseTimer=0;
+let udGudoudamaBalls=[];
+
 let goldenUltActive=false, goldenUltTimer=0;   // ultimate shard mode
 let goldenUltCycle=0;                          // frame counter for 20s cycle
 let goldenCoinBullets=[];                      // koin bullets
@@ -5352,7 +5408,7 @@ function initStars(){ stars=[]; for(let i=0;i<130;i++) stars.push({x:Math.random
 /* ============================================================
    SCREENS
    ============================================================ */
-const SCREENS=['menu','bermain','shop','inv','evo','pause','gameover','baryon-pick','preview','gacha-lab','online','lobby','online-gameover','insting-v2','v2-menu','alien-v2','mabar','mabar-lobby','mabar-over','settings','boss-victory','boss-defeat','boss-clear','daily-reward','fusion-lab','trade','trade-room','duality-quest','mirror-victory','mirror-defeat','mirror-clear','fase-select','fase2-unlock'];
+const SCREENS=['menu','bermain','shop','inv','evo','pause','gameover','baryon-pick','preview','gacha-lab','online','lobby','online-gameover','insting-v2','v2-menu','alien-v2','default-v2','mabar','mabar-lobby','mabar-over','settings','boss-victory','boss-defeat','boss-clear','daily-reward','fusion-lab','trade','trade-room','duality-quest','mirror-victory','mirror-defeat','mirror-clear','fase-select','fase2-unlock'];
 function showScreen(name){
   SCREENS.forEach(s=>{ const el=document.getElementById('screen-'+s); if(el) el.classList.toggle('hidden', s!==name); });
   if(name==='none') SCREENS.forEach(s=>{ const el=document.getElementById('screen-'+s); if(el) el.classList.add('hidden'); });
@@ -5410,6 +5466,7 @@ function showScreen(name){
   if(name==='insting-v2') renderInstingV2Screen();
   if(name==='v2-menu')    renderV2MenuScreen();
   if(name==='alien-v2')   renderAlienV2Screen();
+  if(name==='default-v2') renderDefaultV2Screen();
   if(!['none','boss-victory','boss-defeat','boss-clear'].includes(name)){
     const bh=document.getElementById('boss-hud');
     if(bh&&!brGameActive) bh.style.display='none';
@@ -5626,7 +5683,7 @@ function _rarityRank(id, skin){
 }
 function _skinIcon(id){
   const m={
-    'default':'🚀',
+    'default':'🚀','ultimate_default':'⬛','default_v2':'🚀','celestial_default':'🌌',
     'noob':'🛸',
     'omni_adhack':'👑',
     red:'🔴',green:'🟢',blue:'🔵',violet:'💜',
@@ -5670,6 +5727,7 @@ function renderShop(){
         if(skin.evoOnly) return false;   // Evo-only skins tidak dijual di shop
         if(skin.dailyOnly && !save.inventory.skins.includes(id)) return false;
         if(id==='ego'&&save.egoEvolved) return false;
+        if(id==='default'&&save.inventory.skins.includes('ultimate_default')) return false;
         return true;
       })
       .sort(([idA,skinA],[idB,skinB])=>_rarityRank(idA,skinA)-_rarityRank(idB,skinB));
@@ -8459,6 +8517,23 @@ function renderInventory(){
         </div>`;
       list.appendChild(chipCard);
     }
+
+    // Ancient Fusion permanent item
+    if(save.ancientFusion&&save.ancientFusion.completed){
+      const afCard=document.createElement('div');
+      afCard.className='inv-misi-card done-misi';
+      afCard.style.cssText='border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.05);';
+      afCard.innerHTML=`
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="font-size:2rem;">🏺</div>
+          <div style="flex:1;">
+            <div class="inv-item-name">Ancient Fusion <span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:2px 7px;border-radius:4px;letter-spacing:1px;font-family:Rajdhani,sans-serif;font-weight:900;">PERMANENT</span></div>
+            <div class="inv-item-desc" style="color:rgba(245,158,11,0.6);">Item kuno yang menyimpan energi fusion sejati. Digunakan untuk sesuatu yang belum terungkap...</div>
+          </div>
+          <span style="font-size:1.3rem;">✅</span>
+        </div>`;
+      list.appendChild(afCard);
+    }
   }
 
   // ── TAB: ITEMS ──
@@ -8474,7 +8549,7 @@ function renderInventory(){
       list.innerHTML = '<div class="inv-empty"><div class="inv-empty-icon">⚡</div><div>Belum punya item.<br>Beli di Shop!</div></div>';
       return;
     }
-    const ITEM_ICONS = {shield:'🔰',slow:'🕓',ghost:'👻',emp:'⚡',nanodrone:'🛸',overclock:'🔋',doublescore:'🌟',timestop:'⏸',android_boom:'💥',spear_basic:'🗡️',genjutsu:'🌀',key_lab:'🗝️',checkpoint:'📍'};
+    const ITEM_ICONS = {shield:'🔰',slow:'🕓',ghost:'👻',emp:'⚡',nanodrone:'🛸',overclock:'🔋',doublescore:'🌟',timestop:'⏸',android_boom:'💥',spear_basic:'🗡️',genjutsu:'🌀',key_lab:'🗝️',checkpoint:'📍',ancient_fusion:'🏺'};
     const counts = {};
     validItems.forEach(id => {
       if(id === 'checkpoint'){
@@ -8531,7 +8606,22 @@ function renderInventory(){
         list.appendChild(d);
         return;
       }
-      d.className = 'inv-item-card' + (isRare ? ' rare-item' : '');
+      // ANCIENT FUSION — permanent, no use button
+      if(id === 'ancient_fusion'){
+        d.className = 'inv-item-card rare-item';
+        d.style.cssText += 'border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.05);';
+        d.innerHTML = `
+          <div class="inv-item-icon rare" style="background:rgba(245,158,11,0.2);border-color:rgba(245,158,11,0.5);font-size:1.5rem;">🏺</div>
+          <div class="inv-item-info">
+            <div class="inv-item-name" style="color:#f59e0b;">Ancient Fusion <span style="font-size:0.65rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:2px 7px;border-radius:4px;letter-spacing:1px;font-family:Rajdhani,sans-serif;font-weight:900;margin-left:4px;">PERMANENT</span></div>
+            <div class="inv-item-desc" style="color:rgba(245,158,11,0.6);">Item kuno yang menyimpan energi fusion sejati. Digunakan untuk sesuatu yang belum terungkap...</div>
+          </div>
+          <div class="inv-item-actions">
+            <div class="inv-use-note" style="color:#f59e0b;font-size:0.72rem;text-align:center;">🔒 Tersimpan</div>
+          </div>`;
+        list.appendChild(d);
+        return;
+      }
       d.style.animationDelay = (idx * 0.05) + 's';
       if(id === 'key_lab'){
         d.className = 'inv-item-card rare-item';
@@ -8711,6 +8801,14 @@ function renderInventory(){
     // Quest Checkpoint — selalu tampil di misi tab
     hasMisi = true;
     renderCheckpointQuestCard(list);
+
+    // Ancient Fusion Quest — selalu tampil di misi tab
+    hasMisi = true;
+    renderAncientFusionCard(list);
+
+    // ── ANCIENT FUSION QUEST ──
+    hasMisi = true;
+    renderAncientFusionQuestCard(list);
 
     if(!hasMisi){
       list.innerHTML = '<div class="inv-empty"><div class="inv-empty-icon">📋</div><div>Tidak ada misi aktif saat ini.</div></div>';
@@ -9152,6 +9250,171 @@ function renderV2MenuScreen(){
   if(!hasInsting&&!hasAlien){
     cards.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.3);font-family:Rajdhani,sans-serif;padding:30px;font-size:0.9rem;">Beli skin <b style="color:#4ade80">Insting</b> atau <b style="color:#4ade80">Alien</b> di shop dulu!</div>';
   }
+  renderV2MenuAddDefaultCard();
+}
+
+/* ============================================================
+   DEFAULT V2 UPGRADE SCREEN
+   ============================================================ */
+let dv2PreviewAnimId=null, dv2PreviewFrame=0;
+
+function renderV2MenuAddDefaultCard(){
+  const cards=document.getElementById('v2-menu-cards');
+  if(!cards) return;
+  const dv2Done=save.defaultV2Unlocked;
+  const cd=document.createElement('div');
+  cd.style.cssText='border-radius:18px;padding:18px;background:linear-gradient(135deg,rgba(80,10,10,0.45),rgba(40,5,5,0.25));border:1.5px solid rgba(180,30,30,'+(dv2Done?'0.7':'0.35')+');cursor:pointer;margin-top:14px;';
+  cd.innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="font-size:2.4rem;">🚀</div>
+      <div style="flex:1;">
+        <div style="font-family:'Orbitron',monospace;font-size:0.95rem;font-weight:900;color:#f87171;letter-spacing:1px;">DEFAULT V2</div>
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:2px;">Brutal Volley · Tombak Kendali · Pasif Perisai</div>
+        <div style="margin-top:6px;">
+          <span style="font-size:0.65rem;padding:2px 8px;border-radius:4px;background:${dv2Done?'rgba(34,197,94,0.2)':'rgba(180,30,30,0.12)'};border:1px solid ${dv2Done?'rgba(34,197,94,0.4)':'rgba(180,30,30,0.3)'};color:${dv2Done?'#4ade80':'#f87171'};">${dv2Done?'✅ SUDAH DIUPGRADE':'🚀 EPIC+'}</span>
+        </div>
+      </div>
+      <div style="font-size:1.4rem;">›</div>
+    </div>`;
+  cd.onclick=()=>showScreen('default-v2');
+  cards.appendChild(cd);
+}
+
+function renderDefaultV2Screen(){
+  const q=save.defaultV2Quest||{};
+  const hasDefault=save.inventory.skins.includes('default');
+  const hasUDEvo=save.ultimateDefaultQuest&&save.ultimateDefaultQuest.everEvolved;
+  const reachedLv3=q.reachedLv3||false;
+  const surviveUDLv2=q.surviveUDLv2||false;
+  const paid=q.paid||false;
+  const allDone=hasDefault&&hasUDEvo&&reachedLv3&&surviveUDLv2&&paid;
+
+  const list=document.getElementById('dv2-quest-list');
+  const actions=document.getElementById('dv2-actions');
+  if(!list||!actions) return;
+  list.innerHTML=''; actions.innerHTML='';
+
+  const quests=[
+    { label:'Punya Skin Default (re-evo Ultimate Default dulu)', done:hasDefault, detail:hasDefault?'✅ Default ada di inventory':'❌ Re-evo Ultimate Default ke Default dulu di Lab Evo' },
+    { label:'Pernah unlock Evo Default (Ultimate Default)', done:hasUDEvo, detail:hasUDEvo?'✅ Evo Default pernah diaktifkan':'❌ Buka Lab Evo → tab DEFAULT dulu' },
+    { label:'Main pakai Default sampai Level 3', done:reachedLv3, detail:reachedLv3?'✅ Sudah pernah sampai Level 3':'❌ Main pakai skin Default dan capai Level 3' },
+    { label:'Bertahan di Level 2 pakai Ultimate Default tanpa -nyawa & tanpa item', done:surviveUDLv2, detail:surviveUDLv2?'✅ Selesai':'❌ Aktifkan Ultimate Default, capai & selesaikan Level 2 tanpa kena hit & tanpa pakai item' },
+    { label:'Bayar 25.000 Koin + 750 Fragment', done:paid, detail:paid?'✅ Sudah dibayar':`Koin: ${(save.coins||0).toLocaleString()}/25.000 | Fragment: ${(save.fragments||0).toLocaleString()}/750` },
+  ];
+
+  quests.forEach(quest=>{
+    const d=document.createElement('div');
+    d.className='evo-quest-item'+(quest.done?' done':'');
+    d.innerHTML=`<span style="font-size:0.82rem;">${quest.label}</span><div style="text-align:right;min-width:60px;"><span class="evo-status${quest.done?'':' todo'}">${quest.done?'✅':'❌'}</span><div style="font-size:0.68rem;color:rgba(255,255,255,0.3);margin-top:2px;">${quest.detail}</div></div>`;
+    list.appendChild(d);
+  });
+
+  if(save.defaultV2Unlocked){
+    const d=document.createElement('div');
+    d.style.cssText='text-align:center;font-family:Orbitron,monospace;color:#f87171;font-size:1rem;font-weight:700;padding:10px;';
+    d.textContent='🚀 Default V2 Sudah Diupgrade!';
+    actions.appendChild(d);
+    const equip=document.createElement('button');
+    equip.className='btn btn-primary';
+    equip.style.cssText='background:linear-gradient(135deg,#7f1d1d,#dc2626);border:none;color:#fff;width:100%;padding:12px;border-radius:12px;font-family:Orbitron,monospace;font-weight:700;cursor:pointer;';
+    equip.textContent='🚀 PAKAI DEFAULT V2';
+    equip.onclick=()=>{ equipSkin('default_v2'); showMsg('🚀 Default V2 aktif!',2000); };
+    actions.appendChild(equip);
+    startDV2Preview(); return;
+  }
+
+  if(!q.started){
+    const btn=document.createElement('button');
+    btn.style.cssText='width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#7f1d1d,#dc2626);color:#fff;font-family:Orbitron,monospace;font-weight:700;font-size:0.9rem;cursor:pointer;';
+    btn.textContent='▶ Mulai Quest Default V2';
+    btn.onclick=()=>{ if(!save.defaultV2Quest) save.defaultV2Quest={started:false,reachedLv3:false,surviveUDLv2:false,paid:false,completed:false}; save.defaultV2Quest.started=true; saveData(); renderDefaultV2Screen(); showMsg('🚀 Quest Default V2 dimulai!',3000); };
+    actions.appendChild(btn);
+  }
+
+  if(q.started&&!paid){
+    const canPay=save.coins>=25000&&save.fragments>=750;
+    const btn=document.createElement('button');
+    btn.style.cssText=`width:100%;padding:12px;border-radius:12px;border:none;background:${canPay?'linear-gradient(135deg,#92400e,#d97706)':'rgba(80,80,80,0.3)'};color:#fff;font-family:Orbitron,monospace;font-weight:700;font-size:0.85rem;cursor:${canPay?'pointer':'not-allowed'};`;
+    btn.textContent='💰 Bayar 25.000 Koin + 750 Fragment';
+    btn.onclick=()=>{
+      if(!canPay){ showMsg('Koin/Fragment tidak cukup!',2000); return; }
+      save.coins-=25000; save.fragments-=750;
+      save.defaultV2Quest.paid=true; saveData();
+      renderDefaultV2Screen(); refreshMenuUI(); showMsg('💰 Pembayaran berhasil!',2000);
+    };
+    actions.appendChild(btn);
+  }
+
+  if(q.started&&allDone){
+    const btn=document.createElement('button');
+    btn.style.cssText='width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#7f1d1d,#dc2626,#f87171);color:#fff;font-family:Orbitron,monospace;font-weight:900;font-size:1rem;cursor:pointer;animation:titlePulse 1.5s infinite;';
+    btn.textContent='🚀 SELESAIKAN UPGRADE — DEFAULT V2!';
+    btn.onclick=()=>{
+      save.defaultV2Unlocked=true;
+      if(!save.inventory.skins.includes('default_v2')) save.inventory.skins.push('default_v2');
+      save.defaultV2Quest.completed=true;
+      saveData();
+      flashOverlay('rgba(180,30,30,0.5)',400);
+      setTimeout(()=>flashOverlay('rgba(255,100,100,0.3)',500),450);
+      SFX.play('skinUnlock'); setTimeout(()=>SFX.play('powerup'),600);
+      renderDefaultV2Screen(); refreshMenuUI();
+      showMsg('🚀 DEFAULT V2 UNLOCKED! Modifikasi selesai — tombak siap!',4000);
+    };
+    actions.appendChild(btn);
+  }
+
+  startDV2Preview();
+}
+
+function startDV2Preview(){
+  if(dv2PreviewAnimId) cancelAnimationFrame(dv2PreviewAnimId);
+  dv2PreviewFrame=0;
+  function loop(){
+    const c=document.getElementById('dv2-preview-canvas'); if(!c){dv2PreviewAnimId=null;return;}
+    const pc=c.getContext('2d');
+    const cx=c.width/2, cy=c.height/2+10;
+    pc.fillStyle='#04020d'; pc.fillRect(0,0,c.width,c.height);
+    for(let i=0;i<35;i++){ const sx=(i*137+dv2PreviewFrame*0.4)%c.width,sy=(i*97+dv2PreviewFrame*0.25)%c.height; pc.fillStyle='rgba(255,255,255,0.35)'; pc.beginPath(); pc.arc(sx,sy,0.7,0,Math.PI*2); pc.fill(); }
+    const sz=18, pulse=0.5+0.5*Math.sin(dv2PreviewFrame/12), pulse2=0.5+0.5*Math.sin(dv2PreviewFrame/8+1);
+    // Aura merah
+    const gr=pc.createRadialGradient(cx,cy,sz*0.3,cx,cy,sz*3.2);
+    gr.addColorStop(0,`rgba(200,30,30,${0.2*pulse})`); gr.addColorStop(1,'rgba(0,0,0,0)');
+    pc.fillStyle=gr; pc.beginPath(); pc.arc(cx,cy,sz*3.2,0,Math.PI*2); pc.fill();
+    // Partikel putih
+    for(let k=0;k<5;k++){
+      const a=(k/5)*Math.PI*2+dv2PreviewFrame/20;
+      const px=cx+Math.cos(a)*(sz*1.8+pulse*4), py=cy+Math.sin(a)*(sz*1.8+pulse*4);
+      pc.fillStyle=`rgba(255,255,255,${0.4+0.4*Math.sin(dv2PreviewFrame/7+k)})`;
+      pc.shadowColor='#fff'; pc.shadowBlur=8;
+      pc.beginPath(); pc.arc(px,py,1.5,0,Math.PI*2); pc.fill();
+    }
+    // Tombak kiri
+    const spearOff=Math.sin(dv2PreviewFrame/15)*4;
+    pc.save(); pc.shadowColor='#cc2222'; pc.shadowBlur=14;
+    pc.strokeStyle='rgba(180,20,20,0.9)'; pc.lineWidth=3;
+    pc.beginPath(); pc.moveTo(cx-sz*2.0, cy-sz*0.8+spearOff); pc.lineTo(cx-sz*2.0, cy+sz*0.8+spearOff); pc.stroke();
+    pc.fillStyle='rgba(200,30,30,0.95)';
+    pc.beginPath(); pc.moveTo(cx-sz*2.0, cy-sz*1.1+spearOff); pc.lineTo(cx-sz*2.4, cy-sz*0.6+spearOff); pc.lineTo(cx-sz*1.6, cy-sz*0.6+spearOff); pc.closePath(); pc.fill();
+    // Tombak kanan
+    pc.beginPath(); pc.moveTo(cx+sz*2.0, cy-sz*0.8-spearOff); pc.lineTo(cx+sz*2.0, cy+sz*0.8-spearOff); pc.stroke();
+    pc.beginPath(); pc.moveTo(cx+sz*2.0, cy-sz*1.1-spearOff); pc.lineTo(cx+sz*2.4, cy-sz*0.6-spearOff); pc.lineTo(cx+sz*1.6, cy-sz*0.6-spearOff); pc.closePath(); pc.fill();
+    pc.restore();
+    // Ship body — modifikasi default, warna merah gelap accent
+    pc.shadowBlur=20; pc.shadowColor='#cc2222';
+    const bg=pc.createLinearGradient(cx,cy-sz,cx,cy+sz);
+    bg.addColorStop(0,'#e2e8f0'); bg.addColorStop(0.4,'#94a3b8'); bg.addColorStop(1,'#7f1d1d');
+    pc.fillStyle=bg;
+    pc.beginPath(); pc.moveTo(cx,cy-sz); pc.lineTo(cx-sz*0.75,cy+sz*0.8); pc.lineTo(cx,cy+sz*0.4); pc.lineTo(cx+sz*0.75,cy+sz*0.8); pc.closePath(); pc.fill();
+    // Red stripe di tengah body
+    pc.shadowBlur=8; pc.fillStyle='rgba(180,20,20,0.7)';
+    pc.beginPath(); pc.moveTo(cx,cy-sz*0.5); pc.lineTo(cx-sz*0.15,cy+sz*0.3); pc.lineTo(cx+sz*0.15,cy+sz*0.3); pc.closePath(); pc.fill();
+    // Core
+    pc.fillStyle='#fff'; pc.shadowColor='#f87171'; pc.shadowBlur=15;
+    pc.beginPath(); pc.arc(cx,cy,3+pulse*2,0,Math.PI*2); pc.fill();
+    dv2PreviewFrame++;
+    dv2PreviewAnimId=requestAnimationFrame(loop);
+  }
+  loop();
 }
 
 /* ============================================================
@@ -9307,6 +9570,8 @@ function startAV2Preview(){
 
 function useItem(id){
   const idx=save.inventory.items.indexOf(id); if(idx===-1) return;
+  // Ancient Fusion tidak bisa dipakai
+  if(id==='ancient_fusion'){ showMsg('🏺 Ancient Fusion tidak bisa dipakai — item PERMANENT!',2000); return; }
 
   // Item yang hanya bisa dipakai saat game aktif
   const needsGame = ['shield','slow','ghost','emp','nanodrone','overclock','doublescore','genjutsu','spear_basic','multikoin','berserker'];
@@ -9612,6 +9877,7 @@ function activateEMP(){
   let count=0;
   for(let i=meteors.length-1;i>=0;i--){
     const m=meteors[i]; if(m.type==='proj'||m.type==='proj_blue') continue;
+    ancientFusionTrackMeteorKill(m.type);
     spawnParticles(m.x,m.y,'#fde047',5); meteors.splice(i,1); save.coins++; score++; count++;
   }
   if(levelBossActive){ hitLevelBoss(); hitLevelBoss(); } // EMP hits boss twice
@@ -10427,7 +10693,43 @@ const CHEATS={
   'GODMODE1': ()=>{ giveCheat('god_ramadhan'); },
   'ALLSKINS': ()=>{ openAllSkinsModal(); },
   'ALLSKINSFUSION': ()=>{ openAllSkinsFusionModal(); },
-  'ALLSKINSV2': ()=>{ openAllSkinsV2Modal(); },
+  'ANCIENTFUSIONMANTAP': ()=>{
+    if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+    if(save.ancientFusion.completed){ showMsg('🏺 Ancient Fusion sudah diklaim!',2000); return; }
+    save.ancientFusion.meteorKills=5;
+    save.ancientFusion.easterEggFound=true;
+    if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false,everEvolved:false};
+    save.ultimateDefaultQuest.everEvolved=true;
+    saveData();
+    flashOverlay('rgba(245,158,11,0.5)',600);
+    showMsg('🏺 Semua syarat Ancient Fusion terpenuhi! Buka tab Misi untuk klaim!',4000);
+    SFX.play('powerup');
+  },
+  'CELESTIALQUEST': ()=>{
+    if(!save.celestialQuest) save.celestialQuest={meteorCount:0,dv2Minutes:0,udMinutes:0,reachedLv4NoHit:false};
+    if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false,everEvolved:false};
+    if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:true};
+    save.celestialQuest.meteorCount=1000;
+    save.celestialQuest.dv2Minutes=120;
+    save.celestialQuest.udMinutes=120;
+    save.celestialQuest.reachedLv4NoHit=true;
+    save.ultimateDefaultQuest.everEvolved=true;
+    save.ancientFusion.completed=true;
+    save.ancientFusion.meteorKills=5;
+    save.ancientFusion.easterEggFound=true;
+    if(!save.inventory.items.includes('ancient_fusion')) save.inventory.items.push('ancient_fusion');
+    // Bypass evo & v2 flags
+    save.instingV2Unlocked=true; save.alienV2Unlocked=true; save.defaultV2Unlocked=true;
+    save.egoEvolved=true;
+    if(!save.inventory.skins.includes('insting_v2')) save.inventory.skins.push('insting_v2');
+    if(!save.inventory.skins.includes('alien_v2')) save.inventory.skins.push('alien_v2');
+    if(!save.inventory.skins.includes('default_v2')) save.inventory.skins.push('default_v2');
+    saveData();
+    flashOverlay('rgba(129,140,248,0.5)',600);
+    showMsg('🌌 Semua syarat Celestial Default terpenuhi! Buka Fusion Lab!',4000);
+    SFX.play('powerup');
+    refreshMenuUI();
+  },
   'NOOB': ()=>{ giveCheat('noob'); showMsg('🛸 Skin NOOB didapat! Tampak biasa... tapi menyimpan rahasia gelap 😈'); },
   'ESDEATH': ()=>{
     if(save.inventory.skins.includes('esdeath')){ showMsg('❄️ Kamu sudah memiliki Esdeath!', 2000); return; }
@@ -10747,6 +11049,101 @@ function closeAllSkinsFusionModal(){
   if(m) m.style.display='none';
 }
 
+// ── Celestial Reset: simpan backup & restore ──
+let _celestialBackup = null;
+
+function _celestialResetUnlock(){
+  // Backup dulu semua data celestial yang ada
+  _celestialBackup = {
+    fusionPaid_celestial: !!(save.fusionPaid && save.fusionPaid['celestial_default']),
+    celestialQuest: save.celestialQuest ? JSON.parse(JSON.stringify(save.celestialQuest)) : null,
+    ancientFusion: save.ancientFusion ? JSON.parse(JSON.stringify(save.ancientFusion)) : null,
+    ancientFusionItem: (save.inventory.items||[]).includes('ancient_fusion'),
+    egoEvolved: save.egoEvolved,
+    instingV2Unlocked: save.instingV2Unlocked,
+    alienV2Unlocked: save.alienV2Unlocked,
+    defaultV2Unlocked: save.defaultV2Unlocked,
+    rinneganEvolved: save.rinneganEvolved,
+    ultimateDefaultQuest: save.ultimateDefaultQuest ? JSON.parse(JSON.stringify(save.ultimateDefaultQuest)) : null,
+    fusionPaid_sapphire: !!(save.fusionPaid && save.fusionPaid['sapphire_phoenix']),
+    hasSkins: {
+      celestial_default: save.inventory.skins.includes('celestial_default'),
+      insting_v2: save.inventory.skins.includes('insting_v2'),
+      alien_v2: save.inventory.skins.includes('alien_v2'),
+      default_v2: save.inventory.skins.includes('default_v2'),
+    }
+  };
+
+  // Reset semua data Celestial Default
+  if(!save.fusionPaid) save.fusionPaid = {};
+  delete save.fusionPaid['celestial_default'];
+  save.celestialQuest = {meteorCount:0, dv2Minutes:0, udMinutes:0, reachedLv4NoHit:false};
+  if(!save.ancientFusion) save.ancientFusion = {meteorKills:0, easterEggFound:false, completed:false};
+  save.ancientFusion.completed = false;
+  save.ancientFusion.meteorKills = 0;
+  save.ancientFusion.easterEggFound = false;
+  save.inventory.items = (save.inventory.items||[]).filter(i=>i!=='ancient_fusion');
+  save.egoEvolved = false;
+  save.instingV2Unlocked = false;
+  save.alienV2Unlocked = false;
+  save.defaultV2Unlocked = false;
+  save.rinneganEvolved = false;
+  if(save.ultimateDefaultQuest) save.ultimateDefaultQuest.everEvolved = false;
+  if(save.fusionPaid) delete save.fusionPaid['sapphire_phoenix'];
+  save.inventory.skins = save.inventory.skins.filter(s=>s!=='celestial_default');
+  saveData();
+
+  flashOverlay('rgba(239,68,68,0.3)', 500);
+  showMsg('🔄 Celestial Default direset! Sekarang klik 🎁 Klaim.', 3000);
+  _renderAllSkinsFusionGrid();
+  renderFusionLab && renderFusionLab();
+}
+
+function _celestialRestore(){
+  if(!_celestialBackup){ showMsg('❌ Tidak ada data backup!', 2000); return; }
+  const b = _celestialBackup;
+
+  if(!save.fusionPaid) save.fusionPaid = {};
+  if(b.fusionPaid_celestial) save.fusionPaid['celestial_default'] = true;
+  else delete save.fusionPaid['celestial_default'];
+
+  if(b.celestialQuest) save.celestialQuest = b.celestialQuest;
+  if(b.ancientFusion) save.ancientFusion = b.ancientFusion;
+
+  if(b.ancientFusionItem){
+    if(!(save.inventory.items||[]).includes('ancient_fusion')) save.inventory.items.push('ancient_fusion');
+  } else {
+    save.inventory.items = (save.inventory.items||[]).filter(i=>i!=='ancient_fusion');
+  }
+
+  save.egoEvolved = b.egoEvolved;
+  save.instingV2Unlocked = b.instingV2Unlocked;
+  save.alienV2Unlocked = b.alienV2Unlocked;
+  save.defaultV2Unlocked = b.defaultV2Unlocked;
+  save.rinneganEvolved = b.rinneganEvolved;
+  if(b.ultimateDefaultQuest && save.ultimateDefaultQuest)
+    save.ultimateDefaultQuest.everEvolved = b.ultimateDefaultQuest.everEvolved;
+
+  if(b.fusionPaid_sapphire) save.fusionPaid['sapphire_phoenix'] = true;
+  else delete save.fusionPaid['sapphire_phoenix'];
+
+  // Restore skins
+  ['celestial_default','insting_v2','alien_v2','default_v2'].forEach(s=>{
+    const had = b.hasSkins[s];
+    const has = save.inventory.skins.includes(s);
+    if(had && !has) save.inventory.skins.push(s);
+    if(!had && has) save.inventory.skins = save.inventory.skins.filter(x=>x!==s);
+  });
+
+  _celestialBackup = null;
+  saveData();
+
+  flashOverlay('rgba(34,197,94,0.3)', 500);
+  showMsg('✅ Data Celestial Default dikembalikan seperti semula!', 3000);
+  _renderAllSkinsFusionGrid();
+  renderFusionLab && renderFusionLab();
+}
+
 function _renderAllSkinsFusionGrid(){
   const grid = document.getElementById('allskinsfusion-grid');
   if(!grid) return;
@@ -10766,7 +11163,20 @@ function _renderAllSkinsFusionGrid(){
     const costIcon    = isFragCost ? '💠' : '🪙';
     const costLabel   = isFragCost ? 'Fragment' : 'Koin';
     const costStr     = `${costIcon} ${recipe.cost} ${costLabel}${recipe.costCoins?` + 🪙 ${recipe.costCoins.toLocaleString()} Koin`:''}${recipe.requireKeyLab?' + 🗝️ Key Lab':''}`;
-    return `<div style="border-radius:14px;padding:14px;background:rgba(255,255,255,0.04);border:1.5px solid ${isDone?'rgba(74,222,128,0.45)':'rgba(168,85,247,0.2)'};">
+
+    // Tombol khusus Celestial Default — ada Reset & Kembalikan
+    const isCelestial = recipe.id === 'celestial_default';
+    const hasBackup   = !!_celestialBackup;
+
+    const celestialExtraBtn = isCelestial ? `
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+        ${!hasBackup
+          ? `<button onclick="_celestialResetUnlock()" style="flex:1;padding:8px 10px;border-radius:10px;border:1px solid rgba(239,68,68,0.5);background:rgba(239,68,68,0.12);color:#fca5a5;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;cursor:pointer;">🔄 Reset Celestial</button>`
+          : `<button onclick="_celestialRestore()" style="flex:1;padding:8px 10px;border-radius:10px;border:1px solid rgba(34,197,94,0.5);background:rgba(34,197,94,0.12);color:#86efac;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;cursor:pointer;">↩️ Kembalikan Seperti Semula</button>`
+        }
+      </div>` : '';
+
+    return `<div style="border-radius:14px;padding:14px;background:rgba(255,255,255,0.04);border:1.5px solid ${isDone?'rgba(74,222,128,0.45)':isCelestial?'rgba(251,146,60,0.4)':'rgba(168,85,247,0.2)'};">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
         <div style="font-size:2rem;min-width:44px;text-align:center;">${iconF}</div>
         <div style="flex:1;min-width:0;">
@@ -10785,6 +11195,7 @@ function _renderAllSkinsFusionGrid(){
       <div style="font-size:0.72rem;color:${isDone?'rgba(74,222,128,0.6)':'rgba(255,255,255,0.25)'};">
         ${isDone ? '⚗️ Biaya &amp; quest sudah dihilangkan — tinggal kumpulkan bahan!' : `💸 Biaya asli: ${costStr}`}
       </div>
+      ${celestialExtraBtn}
     </div>`;
   }).join('');
 }
@@ -10793,11 +11204,12 @@ function _allSkinsFusionUnlock(recipeId){
   if(!save.fusionPaid) save.fusionPaid = {};
   const recipe = FUSION_RECIPES.find(r=>r.id===recipeId);
   if(!recipe) return;
-  if(save.inventory.skins.includes(recipeId) || save.fusionPaid[recipeId]){
-    showMsg(`✅ ${SKINS[recipeId]?.name||recipeId} sudah selesai!`, 1500);
+  // Kalau skin fusion sudah dimiliki, benar-benar sudah selesai
+  if(save.inventory.skins.includes(recipeId)){
+    showMsg(`✅ ${SKINS[recipeId]?.name||recipeId} sudah difuse!`, 1500);
     return;
   }
-  // Tandai biaya & semua quest sebagai selesai
+  // Tandai biaya & semua quest sebagai selesai (selalu jalankan ulang walau sudah pernah klaim — untuk fix quest yang belum terisi)
   save.fusionPaid[recipeId] = true;
   if(recipe.requireDiamondMinute)  save.diamondSkinMinuteDone = true;
   if(recipe.requireBlueSkinMinute) save.blueSkinMinuteDone    = true;
@@ -10816,6 +11228,43 @@ function _allSkinsFusionUnlock(recipeId){
       showMsg('🗝️ Key Lab otomatis ditambahkan ke inventory!', 2000);
     }
   }
+  // === FIX: Celestial Default — bypass semua syarat quest khusus ===
+  if(recipe.require1000Meteor){
+    if(!save.celestialQuest) save.celestialQuest={meteorCount:0,dv2Minutes:0,udMinutes:0,reachedLv4NoHit:false};
+    save.celestialQuest.meteorCount  = Math.max(save.celestialQuest.meteorCount||0, 1000);
+    save.celestialQuest.reachedLv4NoHit = true;
+    save.celestialQuest.dv2Minutes   = Math.max(save.celestialQuest.dv2Minutes||0, 120);
+    save.celestialQuest.udMinutes    = Math.max(save.celestialQuest.udMinutes||0, 120);
+  }
+  if(recipe.requireAncientFusion){
+    if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+    save.ancientFusion.meteorKills   = Math.max(save.ancientFusion.meteorKills||0, 5);
+    save.ancientFusion.easterEggFound = true;
+    save.ancientFusion.completed     = true;
+    if(!save.inventory.items) save.inventory.items=[];
+    if(!save.inventory.items.includes('ancient_fusion')) save.inventory.items.push('ancient_fusion');
+  }
+  if(recipe.requireSapphirePhoenix){
+    if(!save.inventory.skins.includes('sapphire_phoenix')) save.fusionPaid['sapphire_phoenix']=true;
+  }
+  if(recipe.require3Evo){
+    save.egoEvolved          = true;
+    save.instingV2Unlocked   = true;
+    save.alienV2Unlocked     = true;
+    save.defaultV2Unlocked   = true;
+    save.rinneganEvolved     = true;
+    if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false,everEvolved:false};
+    save.ultimateDefaultQuest.everEvolved = true;
+  }
+  if(recipe.require3V2){
+    save.instingV2Unlocked = true;
+    save.alienV2Unlocked   = true;
+    save.defaultV2Unlocked = true;
+    if(!save.inventory.skins.includes('insting_v2'))  save.inventory.skins.push('insting_v2');
+    if(!save.inventory.skins.includes('alien_v2'))    save.inventory.skins.push('alien_v2');
+    if(!save.inventory.skins.includes('default_v2'))  save.inventory.skins.push('default_v2');
+  }
+  // ================================================================
   saveData();
   SFX.play('skinUnlock');
   flashOverlay('rgba(168,85,247,0.3)', 600);
@@ -10856,6 +11305,7 @@ function _renderAllSkinsV2Grid(){
   // Pastikan quest objects ada
   if(!save.instingV2Quest) save.instingV2Quest={started:false,dodgeCount:0,paid:false,hasChip:false,completed:false};
   if(!save.alienV2Quest)   save.alienV2Quest={started:false,ufoRideCount:0,surviveCount:0,paid:false,coinPaid:false,completed:false};
+  if(!save.defaultV2Quest) save.defaultV2Quest={started:false,reachedLv3:false,surviveUDLv2:false,paid:false,completed:false};
 
   const V2_ITEMS=[
     {
@@ -10916,6 +11366,41 @@ function _renderAllSkinsV2Grid(){
         if(!save.inventory.skins.includes('alien_v2')) save.inventory.skins.push('alien_v2');
         saveData(); SFX.play('skinUnlock'); flashOverlay('rgba(74,222,128,0.4)',600);
         showMsg('🛸 Alien V2 unlocked! UFO Boarding siap!',3000);
+        _renderAllSkinsV2Grid(); refreshMenuUI();
+      }
+    },
+    {
+      id:'default_v2', baseId:'default',
+      name:'🚀 Default V2', tier:'EPIC+',
+      emoji:'🚀',
+      color:'#f87171', colorBg:'rgba(80,10,10,0.45)',
+      borderDone:'rgba(248,113,113,0.55)', borderPending:'rgba(180,30,30,0.18)',
+      glowColor:'rgba(220,38,38,0.4)',
+      desc:'Brutal Volley · Tombak Kendali · Pasif Perisai',
+      isDone: ()=>save.defaultV2Unlocked,
+      getProgress: ()=>{
+        const q=save.defaultV2Quest;
+        return [
+          { label:'Mulai quest', done:q.started||false },
+          { label:'Punya skin Default', done:save.inventory.skins.includes('default') },
+          { label:'Pernah unlock Evo Default', done:!!(save.ultimateDefaultQuest&&save.ultimateDefaultQuest.everEvolved) },
+          { label:'Main Default sampai Level 3', done:q.reachedLv3||false },
+          { label:'Survive Level 2 pakai Ultimate Default tanpa hit', done:q.surviveUDLv2||false },
+          { label:'Bayar 25.000 Koin + 750 Fragment', done:q.paid||false },
+        ];
+      },
+      claim: ()=>{
+        if(!save.inventory.skins.includes('default')&&!save.inventory.skins.includes('ultimate_default')){
+          showMsg('❌ Butuh skin Default atau Ultimate Default dulu!',2000); return;
+        }
+        if(save.defaultV2Unlocked){ showMsg('✅ Default V2 sudah di-unlock!',1500); return; }
+        if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false,everEvolved:false};
+        save.ultimateDefaultQuest.everEvolved=true;
+        save.defaultV2Quest={started:true,reachedLv3:true,surviveUDLv2:true,paid:true,completed:true};
+        save.defaultV2Unlocked=true;
+        if(!save.inventory.skins.includes('default_v2')) save.inventory.skins.push('default_v2');
+        saveData(); SFX.play('skinUnlock'); flashOverlay('rgba(220,38,38,0.4)',600);
+        showMsg('🚀 Default V2 unlocked! Tombak siap tempur!',3000);
         _renderAllSkinsV2Grid(); refreshMenuUI();
       }
     },
@@ -13808,6 +14293,18 @@ function drawPlayer(){
     ctx.beginPath(); ctx.arc(x,y,size*2.2,0,Math.PI*2); ctx.strokeStyle='rgba(250,204,21,0.4)'; ctx.lineWidth=2; ctx.stroke();
   }
   if(ultEgoShieldOn){ ctx.beginPath(); ctx.arc(x,y,size*2.4,0,Math.PI*2); ctx.strokeStyle='#e879f9'; ctx.lineWidth=4; if(!_skinLightMode){ctx.shadowColor='#e879f9'; ctx.shadowBlur=20;} ctx.stroke(); }
+  // Triple Shield — 3 ring warna beda (Celestial Default pasif)
+  if(cdTripleShieldActive){
+    const tsPulse=0.5+0.5*Math.sin(frame/8);
+    const remaining=3-cdTripleShieldHits;
+    const tsColors=['#818cf8','#34d399','#f59e0b']; // ungu, hijau, emas
+    for(let r=0;r<remaining;r++){
+      ctx.beginPath(); ctx.arc(x,y,size*(1.9+r*0.5),0,Math.PI*2);
+      ctx.strokeStyle=tsColors[r]; ctx.lineWidth=3-r*0.5;
+      ctx.shadowColor=tsColors[r]; ctx.shadowBlur=14+tsPulse*8;
+      ctx.stroke();
+    }
+  }
   if(rbShineOn && !_skinLightMode){ const g=ctx.createRadialGradient(x,y,0,x,y,size*3); g.addColorStop(0,'rgba(249,168,212,0.3)'); g.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,size*3,0,Math.PI*2); ctx.fill(); }
 
   // EGO aura
@@ -14862,11 +15359,21 @@ function drawPlayer(){
     ctx.fillStyle='rgba(0,0,0,0.95)'; // hitam pekat
     ctx.shadowColor=dbOverBeastActive?'#ff0000':(dbFrenzyActive?'#800000':'#440000');
     ctx.shadowBlur=dbOverBeastActive?50+Math.sin(frame/4)*20:(dbFrenzyActive?35+Math.sin(frame/4)*15:20+Math.sin(frame/7)*8);
+  } else if(skin==='default_v2'){
+    // Pesawat modifikasi default — gradient abu-merah
+    const dv2bg=ctx.createLinearGradient(x,y-size,x,y+size);
+    dv2bg.addColorStop(0,'#f1f5f9');
+    dv2bg.addColorStop(0.35,'#cbd5e1');
+    dv2bg.addColorStop(0.7,'#64748b');
+    dv2bg.addColorStop(1,'#7f1d1d');
+    ctx.fillStyle=dv2bg;
+    ctx.shadowColor='#dc2626';
+    ctx.shadowBlur=16+Math.sin(frame/12)*6;
   } else {
     ctx.fillStyle=COLOR[skin]||'#67e8f9';
   }
   // Dark beast, nebula_deceiver, crimson_violet & sakura_phantom shadow sudah diset di atas — skip override
-  if(skin!=='dark_beast' && skin!=='nebula_deceiver' && skin!=='crimson_violet' && skin!=='sakura_phantom' && skin!=='oculus' && skin!=='night_purple' && skin!=='rinnegan_eye' && skin!=='true_rinnegan' && skin!=='samurai' && skin!=='void_titan'){
+  if(skin!=='dark_beast' && skin!=='nebula_deceiver' && skin!=='crimson_violet' && skin!=='sakura_phantom' && skin!=='oculus' && skin!=='night_purple' && skin!=='rinnegan_eye' && skin!=='true_rinnegan' && skin!=='samurai' && skin!=='void_titan' && skin!=='default_v2'){
     ctx.shadowColor=COLOR[skin]||'#67e8f9';
     ctx.shadowBlur=skin==='insting_v2'?30:(egoMode?22:10);
   }
@@ -14881,6 +15388,21 @@ function drawPlayer(){
     ctx.closePath();
     ctx.fill();
     ctx.globalAlpha=1; // reset setelah ghosting sakura
+    // Default V2 — stripe merah di tengah body
+    if(skin==='default_v2'){
+      const dv2pulse=0.5+0.5*Math.sin(frame/10);
+      ctx.shadowColor='#ef4444'; ctx.shadowBlur=10+dv2pulse*6;
+      ctx.fillStyle=`rgba(200,30,30,${0.75+dv2pulse*0.2})`;
+      ctx.beginPath();
+      ctx.moveTo(x, y-size*0.55);
+      ctx.lineTo(x-size*0.18, y+size*0.3);
+      ctx.lineTo(x+size*0.18, y+size*0.3);
+      ctx.closePath(); ctx.fill();
+      // Titik merah di ujung atas
+      ctx.fillStyle='rgba(255,100,100,0.9)';
+      ctx.shadowBlur=12;
+      ctx.beginPath(); ctx.arc(x, y-size*0.7, 3+dv2pulse*1.5, 0, Math.PI*2); ctx.fill();
+    }
   }
 
   // === SAPPHIRE PHOENIX HIGH LEGENDARY FUSION — Custom Blue Bird Shape ===
@@ -15060,6 +15582,330 @@ function drawPlayer(){
   }
 
   // Skin-specific extras
+
+  // === DEFAULT V2 — Pesawat Modif + Partikel Putih + Tombak Melayang ===
+  if(skin==='default_v2'){
+    ctx.save();
+    const dv2Pulse=0.5+0.5*Math.sin(frame/14);
+    const dv2Pulse2=0.5+0.5*Math.sin(frame/9+1.2);
+
+    // --- Aura merah gelap tipis di sekitar pesawat ---
+    ctx.shadowColor='#cc2222'; ctx.shadowBlur=18+dv2Pulse*8;
+    ctx.strokeStyle=`rgba(180,20,20,${0.4+dv2Pulse*0.3})`;
+    ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(x, y, size*1.5, 0, Math.PI*2); ctx.stroke();
+
+    // --- Partikel putih kecil ---
+    if(frame%5===0){
+      const angle=Math.random()*Math.PI*2;
+      particles.push({
+        x: x+Math.cos(angle)*size*(0.8+Math.random()*0.7),
+        y: y+Math.sin(angle)*size*(0.8+Math.random()*0.7),
+        vx:(Math.random()-0.5)*0.7, vy:-(0.3+Math.random()*0.9),
+        r:1.5+Math.random()*2, life:28, maxLife:28,
+        color:'rgba(240,240,255,0.85)'
+      });
+    }
+
+    // --- 2 Tombak melayang di kiri dan kanan (visual pasif, beda dari dv2Spears yang dilempar) ---
+    const spearFloatL=Math.sin(frame/18)*5;
+    const spearFloatR=Math.sin(frame/18+Math.PI)*5;
+    const spearX_L=x-size*2.0;
+    const spearX_R=x+size*2.0;
+
+    // Tombak kiri
+    ctx.shadowColor='#cc2222'; ctx.shadowBlur=16+dv2Pulse*6;
+    ctx.strokeStyle=`rgba(190,25,25,${0.85+dv2Pulse*0.15})`;
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(spearX_L, y-size*1.1+spearFloatL);
+    ctx.lineTo(spearX_L, y+size*0.9+spearFloatL);
+    ctx.stroke();
+    // Ujung atas tombak kiri (mata tombak)
+    ctx.fillStyle='rgba(220,40,40,0.95)';
+    ctx.shadowBlur=12;
+    ctx.beginPath();
+    ctx.moveTo(spearX_L, y-size*1.4+spearFloatL);
+    ctx.lineTo(spearX_L-size*0.35, y-size*0.95+spearFloatL);
+    ctx.lineTo(spearX_L+size*0.35, y-size*0.95+spearFloatL);
+    ctx.closePath(); ctx.fill();
+    // Hiasan bawah tombak kiri
+    ctx.strokeStyle='rgba(255,80,80,0.5)';
+    ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(spearX_L-size*0.2, y+size*0.7+spearFloatL);
+    ctx.lineTo(spearX_L+size*0.2, y+size*0.7+spearFloatL);
+    ctx.stroke();
+
+    // Tombak kanan
+    ctx.shadowColor='#cc2222'; ctx.shadowBlur=16+dv2Pulse2*6;
+    ctx.strokeStyle=`rgba(190,25,25,${0.85+dv2Pulse2*0.15})`;
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(spearX_R, y-size*1.1+spearFloatR);
+    ctx.lineTo(spearX_R, y+size*0.9+spearFloatR);
+    ctx.stroke();
+    // Ujung atas tombak kanan
+    ctx.fillStyle='rgba(220,40,40,0.95)';
+    ctx.shadowBlur=12;
+    ctx.beginPath();
+    ctx.moveTo(spearX_R, y-size*1.4+spearFloatR);
+    ctx.lineTo(spearX_R-size*0.35, y-size*0.95+spearFloatR);
+    ctx.lineTo(spearX_R+size*0.35, y-size*0.95+spearFloatR);
+    ctx.closePath(); ctx.fill();
+    // Hiasan bawah tombak kanan
+    ctx.strokeStyle='rgba(255,80,80,0.5)';
+    ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(spearX_R-size*0.2, y+size*0.7+spearFloatR);
+    ctx.lineTo(spearX_R+size*0.2, y+size*0.7+spearFloatR);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // === ULTIMATE DEFAULT — Ring Hitam + 3 Gudoudama + Partikel Hitam ===
+  if(skin==='ultimate_default'){
+    ctx.save();
+    const udPulse = 0.5+0.5*Math.sin(frame/14);
+    const udPulse2 = 0.5+0.5*Math.sin(frame/9+1.0);
+
+    // --- Ring dark red melingkari pesawat ---
+    ctx.shadowColor='#cc0000'; ctx.shadowBlur=22+udPulse*10;
+    ctx.strokeStyle=`rgba(180,20,20,${0.85+udPulse*0.15})`;
+    ctx.lineWidth=3.5;
+    ctx.beginPath(); ctx.arc(x, y, size*1.7, 0, Math.PI*2); ctx.stroke();
+    // Ring dalam lebih tipis
+    ctx.shadowColor='#ff3333'; ctx.shadowBlur=12;
+    ctx.strokeStyle=`rgba(220,40,40,${0.6+udPulse2*0.3})`;
+    ctx.lineWidth=1.8;
+    ctx.beginPath(); ctx.arc(x, y, size*1.35, 0, Math.PI*2); ctx.stroke();
+    // Highlight merah terang glossy sebagian ring
+    ctx.shadowColor='#ff6666'; ctx.shadowBlur=8;
+    ctx.strokeStyle=`rgba(255,100,100,${0.25+udPulse*0.2})`;
+    ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.arc(x, y, size*1.7, -Math.PI*0.75, -Math.PI*0.25); ctx.stroke();
+
+    // --- Partikel dark red dari ring ---
+    if(frame%4===0){
+      const angle = Math.random()*Math.PI*2;
+      const spawnR = size*1.7;
+      particles.push({
+        x: x+Math.cos(angle)*spawnR,
+        y: y+Math.sin(angle)*spawnR,
+        vx: (Math.random()-0.5)*0.9,
+        vy: -(0.4+Math.random()*1.3),
+        r: 2+Math.random()*3,
+        life: 25, maxLife: 25,
+        color: `rgba(${170+Math.floor(Math.random()*40)},${Math.floor(Math.random()*20)},${Math.floor(Math.random()*20)},0.92)`
+      });
+    }
+
+    // --- 3 Gudoudama: tengah (bawah), kiri, kanan ---
+    // Posisi target: melayang di belakang/samping pesawat
+    const udTargets = [
+      {tx: x,            ty: y+size*1.6},   // tengah bawah
+      {tx: x-size*1.3,   ty: y+size*1.0},   // kiri
+      {tx: x+size*1.3,   ty: y+size*1.0},   // kanan
+    ];
+
+    if(!udGudoudamaBalls || udGudoudamaBalls.length!==3){
+      udGudoudamaBalls=[];
+      for(let i=0;i<3;i++) udGudoudamaBalls.push({
+        x: udTargets[i].tx, y: udTargets[i].ty
+      });
+    }
+
+    // Smooth follow ke posisi target masing-masing
+    for(let i=0;i<3;i++){
+      udGudoudamaBalls[i].x += (udTargets[i].tx - udGudoudamaBalls[i].x)*0.18;
+      udGudoudamaBalls[i].y += (udTargets[i].ty - udGudoudamaBalls[i].y)*0.18;
+    }
+
+    // Gambar 3 bola putih
+    const bSize = size*0.55;
+    for(let i=0;i<3;i++){
+      const b = udGudoudamaBalls[i];
+      const floatOff = Math.sin(frame/18 + i*2.1)*3; // efek mengambang
+      const bx = b.x, by = b.y + floatOff;
+
+      // Glow luar putih
+      ctx.shadowColor='#ffffff'; ctx.shadowBlur=14+udPulse*8;
+      ctx.fillStyle='rgba(240,240,240,0.88)';
+      ctx.beginPath(); ctx.arc(bx, by, bSize, 0, Math.PI*2); ctx.fill();
+
+      // Ring hitam tipis di bola
+      ctx.shadowBlur=0;
+      ctx.strokeStyle='rgba(0,0,0,0.55)';
+      ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.arc(bx, by, bSize, 0, Math.PI*2); ctx.stroke();
+
+      // Dot terang di tengah bola
+      ctx.fillStyle='rgba(255,255,255,0.98)';
+      ctx.beginPath(); ctx.arc(bx-bSize*0.2, by-bSize*0.2, bSize*0.3, 0, Math.PI*2); ctx.fill();
+
+      // Shadow hitam kecil bawah bola
+      ctx.fillStyle='rgba(0,0,0,0.18)';
+      ctx.beginPath(); ctx.ellipse(bx, by+bSize+2, bSize*0.6, bSize*0.18, 0, 0, Math.PI*2); ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  // === CELESTIAL DEFAULT — Pesawat Putih+Emas, 2 Ring Berlawanan, 5 Bola Ekor, Partikel Putih ===
+  if(skin==='celestial_default'){
+    ctx.save();
+    const cdp  = 0.5+0.5*Math.sin(frame/14);
+    const cdp2 = 0.5+0.5*Math.sin(frame/9+1.3);
+
+    // ── Aura celestial luar — gradient putih-emas ──
+    const cdAura = ctx.createRadialGradient(x,y,size*0.4,x,y,size*3.2);
+    cdAura.addColorStop(0,`rgba(255,255,240,${0.18+cdp*0.10})`);
+    cdAura.addColorStop(0.45,`rgba(251,191,36,${0.10+cdp2*0.07})`);
+    cdAura.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=cdAura;
+    ctx.beginPath(); ctx.arc(x,y,size*3.2,0,Math.PI*2); ctx.fill();
+
+    // ── RING 1 — putih, searah jarum jam ──
+    ctx.shadowColor='#ffffff'; ctx.shadowBlur=18+cdp*10;
+    ctx.strokeStyle=`rgba(255,255,255,${0.75+cdp*0.25})`;
+    ctx.lineWidth=2.5;
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(frame/28); // searah jarum jam
+    ctx.beginPath(); ctx.arc(0,0,size*2.1,0,Math.PI*2); ctx.stroke();
+    // Ornamen putih di ring 1 — 4 titik bercahaya
+    for(let i=0;i<4;i++){
+      const a=(i/4)*Math.PI*2;
+      ctx.fillStyle=`rgba(255,255,255,${0.85+cdp*0.15})`;
+      ctx.shadowColor='#fff'; ctx.shadowBlur=14;
+      ctx.beginPath(); ctx.arc(Math.cos(a)*size*2.1, Math.sin(a)*size*2.1, 3.5, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+
+    // ── RING 2 — hitam/abu-gelap, berlawanan arah ──
+    ctx.shadowColor='rgba(30,30,30,0.9)'; ctx.shadowBlur=12+cdp2*8;
+    ctx.strokeStyle=`rgba(20,20,20,${0.80+cdp2*0.20})`;
+    ctx.lineWidth=3;
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(-frame/20); // berlawanan arah
+    // Gambar ring hitam dengan garis putus-putus emas di tepi
+    ctx.beginPath(); ctx.arc(0,0,size*1.6,0,Math.PI*2); ctx.stroke();
+    // Ornamen emas di ring 2 — 6 titik emas kecil
+    for(let i=0;i<6;i++){
+      const a=(i/6)*Math.PI*2;
+      ctx.fillStyle=`rgba(251,191,36,${0.8+cdp*0.2})`;
+      ctx.shadowColor='#fbbf24'; ctx.shadowBlur=10;
+      ctx.beginPath(); ctx.arc(Math.cos(a)*size*1.6, Math.sin(a)*size*1.6, 2.5, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+
+    // ── BODY PESAWAT — putih + emas glossy ──
+    // Badan utama putih-emas
+    const cdBodyG = ctx.createLinearGradient(x,y-size,x,y+size);
+    cdBodyG.addColorStop(0,'#ffffff');
+    cdBodyG.addColorStop(0.3,'#f0f4ff');
+    cdBodyG.addColorStop(0.65,'#e8d48a');
+    cdBodyG.addColorStop(1,'#c9a227');
+    ctx.fillStyle=cdBodyG;
+    ctx.shadowColor='#fbbf24'; ctx.shadowBlur=20+cdp*8;
+    ctx.beginPath();
+    ctx.moveTo(x, y-size*1.1);
+    ctx.lineTo(x-size*0.78, y+size*0.85);
+    ctx.lineTo(x, y+size*0.38);
+    ctx.lineTo(x+size*0.78, y+size*0.85);
+    ctx.closePath(); ctx.fill();
+
+    // Stripe emas di tengah body
+    const cdStripe = ctx.createLinearGradient(x,y-size*0.6,x,y+size*0.3);
+    cdStripe.addColorStop(0,'rgba(255,215,80,0.95)');
+    cdStripe.addColorStop(1,'rgba(201,162,39,0.6)');
+    ctx.fillStyle=cdStripe;
+    ctx.shadowColor='#fde68a'; ctx.shadowBlur=14;
+    ctx.beginPath();
+    ctx.moveTo(x, y-size*0.85);
+    ctx.lineTo(x-size*0.16, y+size*0.22);
+    ctx.lineTo(x+size*0.16, y+size*0.22);
+    ctx.closePath(); ctx.fill();
+
+    // Cockpit — bola putih bercahaya di ujung atas
+    ctx.fillStyle='rgba(255,255,255,0.98)';
+    ctx.shadowColor='#ffffff'; ctx.shadowBlur=22+cdp*10;
+    ctx.beginPath(); ctx.arc(x, y-size*0.72, size*0.28, 0, Math.PI*2); ctx.fill();
+    // Emas kecil di dalam cockpit
+    ctx.fillStyle='rgba(251,191,36,0.8)';
+    ctx.shadowColor='#fbbf24'; ctx.shadowBlur=8;
+    ctx.beginPath(); ctx.arc(x, y-size*0.72, size*0.13, 0, Math.PI*2); ctx.fill();
+
+    // ── PARTIKEL PUTIH mengambang sekitar pesawat ──
+    if(frame%3===0){
+      const pa=Math.random()*Math.PI*2;
+      const pr=size*(1.0+Math.random()*1.8);
+      particles.push({
+        x: x+Math.cos(pa)*pr, y: y+Math.sin(pa)*pr,
+        vx:(Math.random()-0.5)*0.5, vy:-(0.3+Math.random()*0.8),
+        r:1.2+Math.random()*2.2, life:35, maxLife:35,
+        color:`rgba(255,255,${200+Math.floor(Math.random()*55)},${0.6+Math.random()*0.35})`
+      });
+    }
+    // Partikel emas sesekali
+    if(frame%8===0){
+      const ga=Math.random()*Math.PI*2;
+      particles.push({
+        x: x+Math.cos(ga)*size*1.6, y: y+Math.sin(ga)*size*1.6,
+        vx:(Math.random()-0.5)*0.6, vy:-(0.4+Math.random()*1.0),
+        r:1.5+Math.random()*2, life:28, maxLife:28,
+        color:`rgba(251,191,${80+Math.floor(Math.random()*60)},0.85)`
+      });
+    }
+
+    ctx.restore();
+
+    // ── 5 BOLA EKOR — mengikuti player dengan smooth lag ──
+    if(!window._cdTailBalls || window._cdTailBalls.length!==5){
+      window._cdTailBalls=[];
+      for(let i=0;i<5;i++) window._cdTailBalls.push({x,y:y+size*1.2+(i*size*0.55)});
+    }
+    // Posisi target 5 bola — berbentuk kipas di belakang pesawat
+    const cdTailTargets=[
+      {tx:x,              ty:y+size*1.5},        // tengah
+      {tx:x-size*0.75,    ty:y+size*1.6},        // kiri 1
+      {tx:x+size*0.75,    ty:y+size*1.6},        // kanan 1
+      {tx:x-size*1.4,     ty:y+size*1.4},        // kiri 2
+      {tx:x+size*1.4,     ty:y+size*1.4},        // kanan 2
+    ];
+    ctx.save();
+    for(let i=0;i<5;i++){
+      const tb=window._cdTailBalls[i];
+      tb.x+=(cdTailTargets[i].tx-tb.x)*0.15;
+      tb.y+=(cdTailTargets[i].ty-tb.y)*0.15;
+      const floatOff=Math.sin(frame/14+i*1.25)*3.5;
+      const bx=tb.x, by=tb.y+floatOff;
+      const bR=size*(0.32-i*0.02); // makin luar makin kecil dikit
+
+      // Cahaya luar bola
+      ctx.shadowColor='#ffffff'; ctx.shadowBlur=16+cdp*8;
+      const bGrad=ctx.createRadialGradient(bx-bR*0.3,by-bR*0.3,0,bx,by,bR);
+      bGrad.addColorStop(0,'#ffffff');
+      bGrad.addColorStop(0.5,'rgba(240,240,200,0.92)');
+      bGrad.addColorStop(1,'rgba(200,160,50,0.6)');
+      ctx.fillStyle=bGrad;
+      ctx.beginPath(); ctx.arc(bx,by,bR,0,Math.PI*2); ctx.fill();
+
+      // Ring emas tipis di bola
+      ctx.shadowBlur=0;
+      ctx.strokeStyle=`rgba(251,191,36,${0.6+cdp*0.3})`;
+      ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(bx,by,bR,0,Math.PI*2); ctx.stroke();
+
+      // Highlight putih di kiri atas bola
+      ctx.fillStyle='rgba(255,255,255,0.92)';
+      ctx.beginPath(); ctx.arc(bx-bR*0.28,by-bR*0.28,bR*0.28,0,Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
+
   if(skin==='ultimate_ego'){
     const pulse=0.5+0.5*Math.sin(frame/15);
     const pulse2=0.5+0.5*Math.sin(frame/10+1.2);
@@ -19710,6 +20556,7 @@ function checkCollision(){
     if(m._kamuiAbsorbing) continue; // meteor sedang disedot Kamui — TIDAK hit player
     if(m._controlled) continue; // meteor dikontrol Mind Control — TIDAK hit player
     if(m._sengokuTarget) continue; // meteor Sengoku — TIDAK hit player, hanya bisa ditebas
+    if(m._crumbled && m._crumbledTimer > 0) continue; // meteor kena Crumble Wave — TIDAK hit player selama timer aktif
     if(dist(player,m)<player.size+m.size){
       // Ghost5 intercept
       if(ghost5Active){ handleGachaGhost5Hit(); meteors.splice(i,1); return; }
@@ -19744,6 +20591,9 @@ var invincibleTimer=0;
 
 function handleHit(){
   if(invincibleTimer>0) return;
+  // Celestial Default — cek triple shield & streak
+  if(celestialHandleHit()) return;
+  questCelestialHitFail(); // track no-hit quest fail
 
   // BUSOSHOKU HAKI — armor menyerap hit, lives TIDAK berkurang
   if(save.inventory.activeSkin==='haki' && hakiBusoAbsorb()) return;
@@ -23561,6 +24411,23 @@ function updateSkillButtons(){
     show('btn-s3', CD.witheredBloom>0?'🥀 '+Math.ceil(CD.witheredBloom/60)+'s':'🥀 Withered Bloom', CD.witheredBloom===0, CD.witheredBloom/CDMax.witheredBloom);
     setSkillGrid(3);
   }
+  else if(skin==='ultimate_default'){
+    show('btn-s1', CD.udRepulse>0?`⬛ ${Math.ceil(CD.udRepulse/60)}s`:(udRepulseActive?'⬛ AKTIF!':'⬛ Repulse'), CD.udRepulse===0, CD.udRepulse/CDMax.udRepulse);
+    show('btn-s2', CD.udCrumble>0?`💥 ${Math.ceil(CD.udCrumble/60)}s`:'💥 Crumble Wave', CD.udCrumble===0, CD.udCrumble/CDMax.udCrumble);
+    setSkillGrid(2);
+  }
+  else if(skin==='default_v2'){
+    show('btn-s1', CD.dv2Volley>0?`🚀 ${Math.ceil(CD.dv2Volley/60)}s`:'🚀 Brutal Volley', CD.dv2Volley===0, CD.dv2Volley/CDMax.dv2Volley);
+    show('btn-s2', CD.dv2Spear>0?`🗡️ ${Math.ceil(CD.dv2Spear/60)}s`:'🗡️ Spear Throw', CD.dv2Spear===0, CD.dv2Spear/CDMax.dv2Spear);
+    setSkillGrid(2);
+  }
+  else if(skin==='celestial_default'){
+    const burstLocked = cdStreakLocked || cdBurstUsed>=5;
+    const burstLabel = cdBurstUsed>=5 ? '🌌 Max 5x' : cdStreakLocked ? '🌌 Terkunci' : CD.cdBurst>0 ? `🌌 ${Math.ceil(CD.cdBurst/60)}s` : `🌌 Burst (${cdBurstUsed}/5)`;
+    show('btn-s1', burstLabel, !burstLocked&&CD.cdBurst===0, CD.cdBurst/CDMax.cdBurst);
+    show('btn-s2', CD.cdHypno>0?`🌀 ${Math.ceil(CD.cdHypno/60)}s`:'🌀 Hypno Wave', CD.cdHypno===0, CD.cdHypno/CDMax.cdHypno);
+    setSkillGrid(2);
+  }
   else if(skin==='gold_gacha'){
     show('btn-s1', CD.goldShot>0?`💛 ${Math.ceil(CD.goldShot/60)}s`:'💛 Gold Shot', CD.goldShot===0, CD.goldShot/CDMax.goldShot);
     setSkillGrid(1);
@@ -23792,6 +24659,9 @@ document.getElementById('btn-s1').onclick=()=>{
   else if(s==='ego'||s==='ultimate_ego')ultEgoBurst();
   else if(s==='void_dual') skillVoidPull();
   else if(s==='life_dual') skillRootBurst();
+  else if(s==='ultimate_default') skillUdRepulse();
+  else if(s==='default_v2') skillDv2Volley();
+  else if(s==='celestial_default') skillCelestialBurst();
 };
 document.getElementById('btn-s2').onclick=()=>{
   const s=save.inventory.activeSkin;
@@ -23809,6 +24679,9 @@ document.getElementById('btn-s2').onclick=()=>{
   else if(s==='ego'||s==='ultimate_ego')ultEgoShield();
   else if(s==='void_dual') skillVacuumZone();
   else if(s==='life_dual') skillPollenBurst();
+  else if(s==='ultimate_default') skillUdCrumble();
+  else if(s==='default_v2') skillDv2Spear();
+  else if(s==='celestial_default') skillCelestialHypno();
 };
 document.getElementById('btn-s3').onclick=()=>{
   const s=save.inventory.activeSkin;
@@ -24094,6 +24967,11 @@ function resetGameState(){
 var _bossStarted=false;
 window.gameLoop=function(timestamp){
   if(!gameRunning||gamePaused) return;
+
+  // Ancient Fusion — track homing meteor kills via count diff
+  const _homingCountBefore = gameRunning ? meteors.filter(m=>m.type==='homing_meteor').length : 0;
+  const _totalMeteorBefore = gameRunning ? meteors.filter(m=>m.type!=='proj'&&m.type!=='proj_blue').length : 0;
+
   // FPS Cap
   if(fpsCap > 0){
     const minInterval = 1000 / fpsCap;
@@ -24151,6 +25029,25 @@ window.gameLoop=function(timestamp){
   // Update Rainbow Refleks
   if(gameRunning && !gamePaused && save.inventory.activeSkin==='rainbow_refleks') updateRainbowRefleks();
   if(gameRunning && !gamePaused && (save.inventory.activeSkin==='void_dual'||save.inventory.activeSkin==='life_dual')) updateDualitySkins();
+  // Ultimate Default updates
+  if(gameRunning && !gamePaused && save.inventory.activeSkin==='ultimate_default'){
+    updateUdRepulse();
+    updateUdCrumble();
+    // Track default playtime for quest
+    if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false};
+    save.ultimateDefaultQuest.defaultPlayTime=(save.ultimateDefaultQuest.defaultPlayTime||0)+1;
+  }
+  // Default V2 updates
+  if(gameRunning && !gamePaused && save.inventory.activeSkin==='default_v2') updateDv2();
+  // Celestial Default updates
+  if(gameRunning && !gamePaused && save.inventory.activeSkin==='celestial_default') updateCelestialDefault();
+  // Default V2 quest tracking
+  if(gameRunning && !gamePaused){ questTrackDv2Level3(); questTrackDv2UDSurvive(); }
+  // Celestial quest tracking
+  if(gameRunning && !gamePaused && frame%60===0) questTrackCelestialPlaytime();
+  if(gameRunning && !gamePaused) questTrackCelestialLv4NoHit();
+  // Track default skin playtime for Ultimate Default evo quest
+  if(gameRunning && !gamePaused) questTrackDefaultTime();
   // Hack Passives runner
   if(save.inventory.activeSkin==='noob'||save.inventory.activeSkin==='omni_adhack') runHackPassives();
   // === PLAYER MOVEMENT ===
@@ -24412,6 +25309,9 @@ window.gameLoop=function(timestamp){
   if(save.inventory.activeSkin==='sapphire_phoenix'){ drawSapphirePhoenixEffects(); }
   if(save.inventory.activeSkin==='rainbow_refleks'){ drawRainbowRefleksEffects(); }
   if(save.inventory.activeSkin==='void_dual'||save.inventory.activeSkin==='life_dual'){ drawDualityEffects(); }
+  // Ultimate Default effects
+  if(save.inventory.activeSkin==='ultimate_default'){ drawUdCrumbleWaves(); drawCrumbledMeteorOverlay(); }
+  if(save.inventory.activeSkin==='default_v2'){ drawDv2Spears(); }
   // Genjutsu clone — universal untuk semua skin
   else if(ndCloneActive){ updateGenjutsuClones(); drawGenjutsuClones(); }
   if(kamuiPhaseActive) drawKamuiPhaseEffect(); // efek ghost phase
@@ -24445,6 +25345,7 @@ window.gameLoop=function(timestamp){
   if(levelBossActive) drawLevelBoss();
   if(finalBossActive) drawFinalBoss();
   drawParticles();
+  drawCelestialWaves();
 
   if(frame%60===0){
     const isChronos=save.inventory.activeSkin==='chronos';
@@ -24501,6 +25402,34 @@ window.gameLoop=function(timestamp){
   _updateGenjutsuBtn();
   // ── SCREEN EDGE GLOW ──
   if(isKosmetikActive('edge_glow')) drawEdgeGlow();
+
+  // Ancient Fusion — hitung selisih homing meteor yang hancur frame ini
+  if(!save.ancientFusion||!save.ancientFusion.completed){
+    const _homingCountAfter=meteors.filter(m=>m.type==='homing_meteor').length;
+    const _homingKilled=_homingCountBefore-_homingCountAfter;
+    if(_homingKilled>0){
+      if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+      if((save.ancientFusion.meteorKills||0)<5){
+        save.ancientFusion.meteorKills=Math.min(5,(save.ancientFusion.meteorKills||0)+_homingKilled);
+        saveData();
+        showMsg(`🏺 Meteor Incar hancur! ${save.ancientFusion.meteorKills}/5`,1500);
+      }
+    }
+  }
+  // Celestial Default — track 1000 meteor total hancur (selisih per frame)
+  if(!save.celestialQuest) save.celestialQuest={meteorCount:0,dv2Minutes:0,udMinutes:0,reachedLv4NoHit:false};
+  if((save.celestialQuest.meteorCount||0)<1000){
+    const _totalMeteorAfter=meteors.filter(m=>m.type!=='proj'&&m.type!=='proj_blue').length;
+    const _totalKilled=_totalMeteorBefore-_totalMeteorAfter;
+    if(_totalKilled>0){
+      save.celestialQuest.meteorCount=Math.min(1000,(save.celestialQuest.meteorCount||0)+_totalKilled);
+      if(save.celestialQuest.meteorCount%100===0||save.celestialQuest.meteorCount>=1000){
+        saveData();
+        if(save.celestialQuest.meteorCount>=1000) showMsg('🌌 Quest Celestial: 1000 meteor tercapai! ✅',3000);
+      }
+    }
+  }
+
   animFrameId=requestAnimationFrame(window.gameLoop);
 };
 
@@ -24508,8 +25437,15 @@ window.gameLoop=function(timestamp){
    START / END GAME
    ============================================================ */
 function startGame(){
-  bossMode = false; // pastikan bukan boss mode
+  bossMode = false;
   _bossStarted=false;
+  resetDv2QuestTracking();
+  // Reset celestial_default state
+  cdBurstUsed=0; cdStreakStage=0; cdStreakNewLifeTimer=0;
+  cdStreakNewLifeGot=false; cdStreakLocked=false;
+  cdHypnoMeteors=[]; cdPassiveTimer=0;
+  cdTripleShieldActive=false; cdTripleShieldHits=0;
+  _cdLv4NoHitFailed=false; _cdLv4NoHitTracking=false;
   SFX.bgmGame();
   resize(); // pastikan canvas size benar sebelum game mulai
   resetGameState();
@@ -24782,6 +25718,13 @@ document.getElementById('btn-play').onclick    = ()=>{ showScreen('bermain'); };
         revealed = true;
         titleEl.style.transition = 'opacity 0.4s';
         titleEl.style.opacity = '0';
+        // Track easter egg untuk Ancient Fusion quest
+        if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+        if(!save.ancientFusion.easterEggFound){
+          save.ancientFusion.easterEggFound=true;
+          saveData();
+          setTimeout(()=>{ showMsg('🏺 Easter Egg ditemukan! Syarat Ancient Fusion terpenuhi!',3000); SFX.play('powerup'); },600);
+        }
         setTimeout(()=>{
           titleEl.textContent = '👑 Ahmad Ramadhan';
           titleEl.style.background = 'linear-gradient(135deg,#4ade80,#ffffff,#ef4444)';
@@ -24940,6 +25883,25 @@ const FUSION_RECIPES = [
     requirePhoenixLevel3: true,
     requireBlueSkinMinute: true,
     desc: '2 Nyawa. Phoenix kristal api biru yang bangkit lebih gahar! S1 Sapphire Lance: tombak api biru menyapu (CD 12s). S2 Crystal Orb: 8 bola api biru mengelilingi, tap lempar ke arah tap (CD 18s). S3 Blue Inferno: 15 bola api biru auto-aim (CD 25s). PASSIVE Crystal Rebirth: bangkit saat nyawa habis, api biru hancurkan semua meteor, kebal 5 detik, +100 koin!',
+  },
+  {
+    id: 'celestial_default',
+    name: '🌌 Celestial Default',
+    tier: 'HIGH LEGENDARY FUSION',
+    tierColor: '#a78bfa',
+    mat1: 'ultimate_default',
+    mat2: 'default_v2',
+    cost: 0,
+    costType: 'none',
+    requireAncientFusion: true,
+    require1000Meteor: true,
+    requireSapphirePhoenix: true,
+    requireLv4NoHit: true,
+    requireDv2Minutes: true,
+    requireUdMinutes: true,
+    require3Evo: true,
+    require3V2: true,
+    desc: '4 Nyawa. Puncak evolusi Default! S1 Celestial Burst: hancurkan semua meteor — streak Shield→Double Shield→+1 Nyawa→Skor (max 5x/game, CD 50s). S2 Hypno Wave: hipnotis semua meteor jadi teman 7 detik +50 koin/meteor +50 skor/kill. PASIF: 5% chance Triple Shield tiap 35 detik.',
   },
 ];
 
@@ -25178,7 +26140,24 @@ function renderFusionLab(){
     const hasDiamondMinute  = !recipe.requireDiamondMinute  || !!save.diamondSkinMinuteDone;
     const hasRRDodge25 = !recipe.requireRRDodge25 || !!save.rrDodge25Done;
     const hasRequiredFusions = !recipe.requireFusionDone || recipe.requireFusionDone.every(id=>!!(save.fusionPaid&&save.fusionPaid[id]));
-    const canFuse = hasMat1 && hasMat2 && hasCost && hasExtraCoins && !hasFusion && hasLevel3 && hasKeyLab && hasPhoenixLevel3 && hasBlueSkinMinute && hasDiamondMinute && hasRRDodge25 && hasRequiredFusions;
+    // Celestial Default special requirements
+    const hasAncientFusion = !recipe.requireAncientFusion || !!(save.ancientFusion&&save.ancientFusion.completed);
+    const hasSapphirePhoenix = !recipe.requireSapphirePhoenix || save.inventory.skins.includes('sapphire_phoenix');
+    const has1000Meteor = !recipe.require1000Meteor || (save.celestialQuest&&(save.celestialQuest.meteorCount||0)>=1000);
+    const hasLv4NoHit = !recipe.requireLv4NoHit || !!(save.celestialQuest&&save.celestialQuest.reachedLv4NoHit);
+    const hasDv2Minutes = !recipe.requireDv2Minutes || (save.celestialQuest&&(save.celestialQuest.dv2Minutes||0)>=120);
+    const hasUdMinutes = !recipe.requireUdMinutes || (save.celestialQuest&&(save.celestialQuest.udMinutes||0)>=120);
+    const has3Evo = !recipe.require3Evo || (()=>{
+      const evoCount=[save.egoEvolved,save.instingV2Unlocked,save.alienV2Unlocked,save.defaultV2Unlocked,
+        !!(save.ultimateDefaultQuest&&save.ultimateDefaultQuest.everEvolved),
+        !!(save.rinneganEvolved)].filter(Boolean).length;
+      return evoCount>=3;
+    })();
+    const has3V2 = !recipe.require3V2 || (()=>{
+      const v2Count=[save.instingV2Unlocked,save.alienV2Unlocked,save.defaultV2Unlocked].filter(Boolean).length;
+      return v2Count>=3;
+    })();
+    const canFuse = hasMat1 && hasMat2 && hasCost && hasExtraCoins && !hasFusion && hasLevel3 && hasKeyLab && hasPhoenixLevel3 && hasBlueSkinMinute && hasDiamondMinute && hasRRDodge25 && hasRequiredFusions && hasAncientFusion && hasSapphirePhoenix && has1000Meteor && hasLv4NoHit && hasDv2Minutes && hasUdMinutes && has3Evo && has3V2;
     const skin1 = SKINS[recipe.mat1];
     const skin2 = SKINS[recipe.mat2];
     const skinF = SKINS[recipe.id];
@@ -25272,6 +26251,14 @@ function renderFusionLab(){
         else if(!hasDiamondMinute) reason='❌ Belum main 1 menit pakai skin Diamond!';
         else if(!hasRRDodge25) reason=`❌ Belum 25 dodge pakai Insting V2 (progress: ${save.rrDodgeAccum||0}/25)`;
         else if(!hasRequiredFusions) reason=`❌ Harus pernah fusion: ${(recipe.requireFusionDone||[]).filter(id=>!(save.fusionPaid&&save.fusionPaid[id])).map(id=>SKINS[id]?.name||id).join(', ')}`;
+        else if(!hasAncientFusion) reason="❌ Butuh item Ancient Fusion (selesaikan quest di tab Misi)!";
+        else if(!hasSapphirePhoenix) reason="❌ Butuh skin Sapphire Phoenix dulu!";
+        else if(!has1000Meteor) reason="❌ Hancurkan 1000 meteor dulu (" + (save.celestialQuest?.meteorCount||0) + "/1000)";
+        else if(!hasLv4NoHit) reason="❌ Harus maju ke Level 4 tanpa kena hit sekalipun!";
+        else if(!hasDv2Minutes) reason="❌ Main Default V2 minimal 2 menit!";
+        else if(!hasUdMinutes) reason="❌ Main Ultimate Default minimal 2 menit!";
+        else if(!has3Evo) reason="❌ Minimal 3 Evo harus sudah di-unlock!";
+        else if(!has3V2) reason="❌ Minimal 3 V2 harus sudah di-unlock!";
         else if(!hasKeyLab) reason='❌ Key Lab Dibutuhkan (main pakai Samurai!)';
         else if(!hasExtraCoins) reason=`❌ Koin Kurang (butuh ${recipe.costCoins} koin, punya ${save.coins})`;
         else reason=`❌ Fragment Kurang (butuh ${recipe.cost - currentAmt} lagi)`;
@@ -32552,6 +33539,151 @@ function drawWitheredBloomPlants(){
   });
 }
 
+// ============================================================
+//  ⬛ ULTIMATE DEFAULT — EPIC EVO SKILLS
+// ============================================================
+
+// S1: REPULSE — meteor menghindar player 10 detik, CD 20 detik
+function skillUdRepulse(){
+  if(save.inventory.activeSkin!=='ultimate_default') return;
+  if(CD.udRepulse>0){ showMsg(`⬛ CD: ${Math.ceil(CD.udRepulse/60)}s`,800); return; }
+  udRepulseActive=true;
+  udRepulseTimer=10*60; // 10 detik
+  CD.udRepulse=CDMax.udRepulse;
+  flashOverlay('rgba(0,0,0,0.4)',600);
+  SFX.play('shieldOn');
+  showMsg('⬛ REPULSE! Meteor menghindar 10 detik!',2000);
+  // Spawn partikel hitam meledak ke luar
+  for(let i=0;i<24;i++){
+    const a=(i/24)*Math.PI*2;
+    particles.push({x:player.x,y:player.y,
+      vx:Math.cos(a)*4,vy:Math.sin(a)*4,
+      r:4+Math.random()*4,life:35,maxLife:35,color:'rgba(0,0,0,0.9)'});
+  }
+  updateSkillButtons();
+}
+
+// S2: CRUMBLE WAVE — shockwave gelombang, semua meteor jadi batu retak
+function skillUdCrumble(){
+  if(save.inventory.activeSkin!=='ultimate_default') return;
+  if(CD.udCrumble>0){ showMsg(`⬛ CD: ${Math.ceil(CD.udCrumble/60)}s`,800); return; }
+  CD.udCrumble=CDMax.udCrumble;
+  SFX.play('explodeBig');
+  // Shockwave visual — ring yang mengembang
+  udCrumbleWaves=[];
+  for(let w=0;w<3;w++) udCrumbleWaves.push({x:player.x,y:player.y,r:player.size,maxR:Math.max(canvas.width,canvas.height)*0.9,alpha:1,delay:w*8});
+  // Ubah SEMUA meteor yang sudah ada di map jadi batu retak
+  let count=0;
+  for(const m of meteors){
+    if(m.type==='proj'||m.type==='proj_blue'||m._crumbled) continue;
+    m._crumbled=true; // flag batu retak — tidak bisa hit player SELAMANYA sampai keluar layar
+    m._crumbledTimer=99999; // permanen selagi di map
+    count++;
+  }
+  flashOverlay('rgba(80,60,40,0.55)',800);
+  showMsg(`⬛ CRUMBLE WAVE! ${count} meteor jadi batu retak!`,2500);
+  updateSkillButtons();
+}
+
+// Update repulse timer per frame
+function updateUdRepulse(){
+  if(!udRepulseActive) return;
+  udRepulseTimer--;
+  if(udRepulseTimer<=0){ udRepulseActive=false; showMsg('⬛ Repulse berakhir.',1200); updateSkillButtons(); return; }
+  // Dorong meteor yang terlalu dekat (radius 150px)
+  for(const m of meteors){
+    if(m.type==='proj'||m.type==='proj_blue') continue;
+    const dx=m.x-player.x, dy=m.y-player.y, d=Math.hypot(dx,dy)||1;
+    if(d<150){ m.vx+=(dx/d)*2.2; m.vy+=(dy/d)*1.0; }
+  }
+}
+
+// Update crumble wave animation & crumbled meteor behavior
+function updateUdCrumble(){
+  // Update shockwave rings
+  for(let i=udCrumbleWaves.length-1;i>=0;i--){
+    const w=udCrumbleWaves[i];
+    if(w.delay>0){ w.delay--; continue; }
+    w.r+=18; w.alpha=Math.max(0,1-(w.r/w.maxR));
+    if(w.alpha<=0) udCrumbleWaves.splice(i,1);
+  }
+  // Update crumbled meteors — tidak melukai player, hancur saat keluar layar bawah
+  for(let i=meteors.length-1;i>=0;i--){
+    const m=meteors[i];
+    if(!m._crumbled) continue;
+    m._crumbledTimer--;
+    // Saat kena player — tidak hit, langsung hancur
+    if(Math.hypot(m.x-player.x,m.y-player.y)<player.size+m.size){
+      for(let p=0;p<8;p++) particles.push({x:m.x,y:m.y,vx:(Math.random()-0.5)*5,vy:(Math.random()-0.5)*5,r:4,life:25,color:'#a8a29e'});
+      score+=3; save.coins=(save.coins||0)+2;
+      meteors.splice(i,1); continue;
+    }
+    // Hancur kalau sudah di bawah layar atau timer habis
+    if(m.y>canvas.height+40||m._crumbledTimer<=0){
+      for(let p=0;p<6;p++) particles.push({x:m.x,y:m.y,vx:(Math.random()-0.5)*4,vy:(Math.random()-0.5)*4,r:3,life:20,color:'#78716c'});
+      meteors.splice(i,1);
+    }
+  }
+}
+
+// Draw crumble waves & crumbled meteor overlay
+function drawUdCrumbleWaves(){
+  if(udCrumbleWaves.length===0) return;
+  ctx.save();
+  for(const w of udCrumbleWaves){
+    if(w.delay>0) continue;
+    ctx.strokeStyle=`rgba(120,110,100,${w.alpha*0.9})`;
+    ctx.lineWidth=4*(1-w.r/w.maxR)+1;
+    ctx.shadowColor='rgba(160,150,130,0.8)'; ctx.shadowBlur=12*w.alpha;
+    ctx.beginPath(); ctx.arc(w.x,w.y,w.r,0,Math.PI*2); ctx.stroke();
+    // Second thinner ring
+    ctx.strokeStyle=`rgba(200,190,180,${w.alpha*0.5})`;
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(w.x,w.y,w.r*0.7,0,Math.PI*2); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// Draw crumbled meteor overlay (abu retak)
+function drawCrumbledMeteorOverlay(){
+  for(const m of meteors){
+    if(!m._crumbled) continue;
+    ctx.save();
+    // Overlay abu retak di atas meteor
+    ctx.globalAlpha=0.75;
+    // Background abu
+    ctx.fillStyle='#78716c';
+    ctx.shadowColor='#57534e'; ctx.shadowBlur=4;
+    ctx.beginPath(); ctx.arc(m.x,m.y,m.size||15,0,Math.PI*2); ctx.fill();
+    // Crack lines
+    ctx.strokeStyle='rgba(30,20,10,0.8)'; ctx.lineWidth=1.5; ctx.shadowBlur=0;
+    ctx.globalAlpha=0.85;
+    // Crack 1
+    ctx.beginPath(); ctx.moveTo(m.x-m.size*0.3,m.y-m.size*0.5); ctx.lineTo(m.x+m.size*0.1,m.y+m.size*0.2); ctx.lineTo(m.x+m.size*0.4,m.y+m.size*0.5); ctx.stroke();
+    // Crack 2
+    ctx.beginPath(); ctx.moveTo(m.x+m.size*0.3,m.y-m.size*0.4); ctx.lineTo(m.x-m.size*0.1,m.y+m.size*0.1); ctx.stroke();
+    // Crack 3
+    ctx.beginPath(); ctx.moveTo(m.x-m.size*0.5,m.y+m.size*0.1); ctx.lineTo(m.x+m.size*0.2,m.y-m.size*0.2); ctx.stroke();
+    // Label retak kecil
+    ctx.globalAlpha=0.6;
+    ctx.fillStyle='#e7e5e4'; ctx.font=`${Math.max(8,m.size*0.5)}px monospace`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('✕',m.x,m.y);
+    ctx.restore();
+  }
+}
+
+// Syarat unlock Ultimate Default
+function checkUltimateDefaultUnlock(){
+  if(save.ultimateDefaultQuest && save.ultimateDefaultQuest.unlocked) return true;
+  const skins = save.inventory.skins||[];
+  const skinCount = skins.length;
+  const fusionUnlocked = skins.filter(s=>SKINS[s]&&(SKINS[s].fusion||SKINS[s].isFusion)).length;
+  const hasLegendary = skins.some(s=>SKINS[s]&&(SKINS[s].limited||SKINS[s].highLegendary||SKINS[s].mythical||SKINS[s].gachaTier==='LEGENDARY'));
+  const defaultTime = (save.ultimateDefaultQuest&&save.ultimateDefaultQuest.defaultPlayTime)||0;
+  const defaultOk = defaultTime >= 2*60*60; // 2 menit = 120 detik * 60 frame
+  return skinCount>=15 && fusionUnlocked>=2 && hasLegendary && defaultOk;
+}
+
 // ── MASTER UPDATE DUALITY ──
 function updateDualitySkins(){
   updateVoidPull();
@@ -37174,18 +38306,27 @@ function drawRinneganOverrides(){
 function switchEvoTab(tab){
   const egoPanel=document.getElementById('evo-panel-ego');
   const rnPanel=document.getElementById('evo-panel-rinnegan');
+  const udPanel=document.getElementById('evo-panel-ud');
   const egoTab=document.getElementById('evo-tab-ego');
   const rnTab=document.getElementById('evo-tab-rinnegan');
+  const udTab=document.getElementById('evo-tab-ud');
+  // Hide all
+  [egoPanel,rnPanel,udPanel].forEach(p=>{ if(p) p.style.display='none'; });
+  // Reset all tabs
+  const inactiveStyle={background:'rgba(255,255,255,0.07)',color:'rgba(255,255,255,0.45)',boxShadow:'none',border:'1px solid rgba(255,255,255,0.1)'};
+  [egoTab,rnTab,udTab].forEach(t=>{ if(t){ t.style.background=inactiveStyle.background; t.style.color=inactiveStyle.color; t.style.boxShadow=inactiveStyle.boxShadow; t.style.border=inactiveStyle.border; } });
   if(tab==='ego'){
-    egoPanel.style.display=''; rnPanel.style.display='none';
-    egoTab.style.background='linear-gradient(135deg,#7c3aed,#4c1d95)'; egoTab.style.color='#fff'; egoTab.style.boxShadow='0 3px 12px rgba(124,58,237,0.4)'; egoTab.style.border='none';
-    rnTab.style.background='rgba(255,255,255,0.07)'; rnTab.style.color='rgba(255,255,255,0.45)'; rnTab.style.boxShadow='none'; rnTab.style.border='1px solid rgba(255,255,255,0.1)';
+    if(egoPanel) egoPanel.style.display='';
+    if(egoTab){ egoTab.style.background='linear-gradient(135deg,#7c3aed,#4c1d95)'; egoTab.style.color='#fff'; egoTab.style.boxShadow='0 3px 12px rgba(124,58,237,0.4)'; egoTab.style.border='none'; }
     renderEvo();
-  } else {
-    rnPanel.style.display=''; egoPanel.style.display='none';
-    rnTab.style.background='linear-gradient(135deg,#7c3aed,#a855f7)'; rnTab.style.color='#fff'; rnTab.style.boxShadow='0 3px 12px rgba(168,85,247,0.4)'; rnTab.style.border='none';
-    egoTab.style.background='rgba(255,255,255,0.07)'; egoTab.style.color='rgba(255,255,255,0.45)'; egoTab.style.boxShadow='none'; egoTab.style.border='1px solid rgba(255,255,255,0.1)';
+  } else if(tab==='rinnegan'){
+    if(rnPanel) rnPanel.style.display='';
+    if(rnTab){ rnTab.style.background='linear-gradient(135deg,#7c3aed,#a855f7)'; rnTab.style.color='#fff'; rnTab.style.boxShadow='0 3px 12px rgba(168,85,247,0.4)'; rnTab.style.border='none'; }
     renderRinneganEvo();
+  } else if(tab==='ud'){
+    if(udPanel) udPanel.style.display='';
+    if(udTab){ udTab.style.background='linear-gradient(135deg,#1c1c1c,#3a3a3a)'; udTab.style.color='#fff'; udTab.style.boxShadow='0 3px 12px rgba(0,0,0,0.6)'; udTab.style.border='none'; }
+    renderUltimateDefaultEvo();
   }
 }
 
@@ -37318,7 +38459,810 @@ function reAwakeningRinnegan(){
   showMsg('👁️‍🗨️ TRUE RINNEGAN kembali aktif!',2000);
 }
 
+// ============================================================
+//  ⬛ ULTIMATE DEFAULT EVO — Lab Evo Tab
+// ============================================================
+function renderUltimateDefaultEvo(){
+  if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false,everEvolved:false};
+  const q = save.ultimateDefaultQuest;
+  const list = document.getElementById('ud-evo-list');
+  const badge = document.getElementById('ud-evo-status-badge');
+  if(!list) return;
+  list.innerHTML = '';
+
+  // PASTIKAN default ada di inventory kalau ultimate_default juga tidak ada
+  if(!save.inventory.skins.includes('default') && !save.inventory.skins.includes('ultimate_default')){
+    save.inventory.skins.push('default');
+    saveData();
+  }
+
+  // === STATE 1: Sudah unlock / punya ultimate_default ===
+  if(q.unlocked || save.inventory.skins.includes('ultimate_default')){
+    if(!save.inventory.skins.includes('ultimate_default')){
+      save.inventory.skins.push('ultimate_default');
+      saveData();
+    }
+    if(badge) badge.innerHTML = '<span style="color:#e2e8f0;font-size:0.85rem;">\u2b1b ULTIMATE DEFAULT \u2014 EPIC EVO AKTIF</span>';
+    const done = document.createElement('div');
+    done.className = 'evo-quest-card done';
+    done.innerHTML = '<div class="evo-quest-icon-wrap">\u2b1b</div><div class="evo-quest-text"><div class="evo-quest-label" style="color:#e2e8f0;">ULTIMATE DEFAULT \u2014 EPIC</div><div class="evo-quest-sub">Default telah berevolusi! Gudoudama mengikutimu...</div></div><div class="evo-quest-check">\u2705</div>';
+    list.appendChild(done);
+    const rv = document.createElement('div');
+    rv.style.cssText = 'background:rgba(50,50,50,0.2);border:1px solid rgba(200,200,200,0.2);border-radius:16px;padding:16px;margin-top:10px;';
+    rv.innerHTML = '<div style="font-size:0.82rem;color:rgba(255,255,255,0.45);margin-bottom:10px;">\uD83D\uDD04 Kembalikan ke Default biasa. Bisa evo lagi kapanpun!</div><button onclick="revertUltimateDefault()" style="width:100%;padding:11px;border-radius:12px;border:1px solid rgba(200,200,200,0.3);background:rgba(80,80,80,0.2);color:#e2e8f0;font-family:Rajdhani,sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;">\u2b1b Kembalikan ke Default Biasa</button>';
+    list.appendChild(rv);
+    const btn = document.getElementById('btn-ud-evo-complete');
+    if(btn) btn.style.display = 'none';
+    return;
+  }
+
+  // === STATE 2: Pernah evo, sekarang pakai default lagi → re-evo instan ===
+  if(q.everEvolved){
+    if(badge) badge.innerHTML = '<span style="color:#fbbf24;font-size:0.85rem;">\u2b1b Default Biasa (bisa evo lagi)</span>';
+    const rc = document.createElement('div');
+    rc.className = 'evo-quest-card done';
+    rc.innerHTML = '<div class="evo-quest-icon-wrap">\u2b1b</div><div class="evo-quest-text"><div class="evo-quest-label">Sudah pernah evolusi!</div><div class="evo-quest-sub">Bisa langsung evo ke Ultimate Default lagi kapanpun.</div></div><div class="evo-quest-check">\uD83D\uDD04</div>';
+    list.appendChild(rc);
+    const btn2 = document.createElement('button');
+    btn2.style.cssText = 'width:100%;margin-top:12px;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#1c1c1c,#555);color:#fff;font-family:Orbitron,monospace;font-size:1rem;font-weight:900;cursor:pointer;letter-spacing:1px;';
+    btn2.textContent = '\u2b1b EVO LAGI \u2014 ULTIMATE DEFAULT';
+    btn2.onclick = function(){
+      save.inventory.skins = save.inventory.skins.filter(function(s){ return s !== 'default' && s !== 'ultimate_default'; });
+      save.inventory.skins.push('ultimate_default');
+      save.inventory.activeSkin = 'ultimate_default';
+      save.ultimateDefaultQuest.unlocked = true;
+      saveData();
+      renderUltimateDefaultEvo();
+      if(typeof refreshMenuUI === 'function') refreshMenuUI();
+      flashOverlay('rgba(0,0,0,0.6)', 400);
+      showMsg('\u2b1b ULTIMATE DEFAULT kembali aktif!', 2500);
+    };
+    list.appendChild(btn2);
+    const btn = document.getElementById('btn-ud-evo-complete');
+    if(btn) btn.style.display = 'none';
+    return;
+  }
+
+  // === STATE 3: Belum evo — tampilkan syarat ===
+  const skins = save.inventory.skins || [];
+  const skinCount = skins.length;
+  const fusionCount = skins.filter(function(s){ return SKINS[s] && (SKINS[s].fusion || SKINS[s].isFusion); }).length;
+  const hasLegendary = skins.some(function(s){ return SKINS[s] && (SKINS[s].limited || SKINS[s].highLegendary || SKINS[s].mythical || SKINS[s].gachaTier === 'LEGENDARY'); });
+  const defaultFrames = q.defaultPlayTime || 0;
+  const defaultSeconds = Math.floor(defaultFrames / 60);
+  const defaultDone = defaultSeconds >= 120;
+  const allDone = skinCount >= 15 && fusionCount >= 2 && hasLegendary && defaultDone;
+
+  if(badge){
+    if(allDone) badge.innerHTML = '<span style="color:#4ade80;font-size:0.78rem;">\u2705 Semua syarat terpenuhi! Evolve sekarang!</span>';
+    else badge.innerHTML = '<span style="color:rgba(255,255,255,0.35);font-size:0.78rem;">\u2b1b Selesaikan semua syarat untuk evolve Default</span>';
+  }
+
+  const quests = [
+    {icon:'\u2b1b', label:'Punya Skin Default', sub:'Sudah dimiliki dari awal', done:true, pct:100},
+    {icon:'\uD83C\uDF92', label:'Miliki 15 Skin', sub:Math.min(skinCount,15)+'/15 skin dimiliki', done:skinCount>=15, pct:Math.min(100,(skinCount/15)*100)},
+    {icon:'\uD83D\uDD2C', label:'Unlock 2 Skin Fusion', sub:Math.min(fusionCount,2)+'/2 fusion dimiliki', done:fusionCount>=2, pct:Math.min(100,(fusionCount/2)*100)},
+    {icon:'\uD83D\uDC51', label:'Miliki 1 Legendary Skin', sub:hasLegendary?'\u2705 Sudah punya':'\u274C Belum punya', done:hasLegendary, pct:hasLegendary?100:0},
+    {icon:'\u23F1\uFE0F', label:'Main dengan Default 2 menit', sub:Math.min(defaultSeconds,120)+'/120 detik (dicicil dari semua sesi)', done:defaultDone, pct:Math.min(100,(defaultSeconds/120)*100)},
+  ];
+
+  quests.forEach(function(item, i){
+    const d = document.createElement('div');
+    d.className = 'evo-quest-card' + (item.done ? ' done' : '');
+    d.style.animationDelay = (i * 0.06) + 's';
+    const barHtml = (item.pct > 0 && item.pct < 100) ? '<div class="evo-mini-bar-wrap"><div class="evo-mini-bar" style="width:'+item.pct+'%;background:linear-gradient(90deg,#555,#aaa);"></div></div>' : '';
+    d.innerHTML = '<div class="evo-quest-icon-wrap">'+(item.done?'\u2705':item.icon)+'</div><div class="evo-quest-text"><div class="evo-quest-label">'+item.label+'</div><div class="evo-quest-sub">'+item.sub+'</div>'+barHtml+'</div><div class="evo-quest-check">'+(item.done?'\u2705':item.pct>0?'\uD83D\uDD04':'\u2B1C')+'</div>';
+    list.appendChild(d);
+  });
+
+  const btn = document.getElementById('btn-ud-evo-complete');
+  if(btn) btn.style.display = allDone ? 'block' : 'none';
+}
+
+document.getElementById('btn-ud-evo-complete').onclick=()=>{
+  doEvolveUltimateDefault();
+};
+
+function doEvolveUltimateDefault(){
+  if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false};
+  const q=save.ultimateDefaultQuest;
+  const skins=save.inventory.skins||[];
+  const skinCount=skins.length;
+  const fusionCount=skins.filter(s=>SKINS[s]&&(SKINS[s].fusion||SKINS[s].isFusion)).length;
+  const hasLegendary=skins.some(s=>SKINS[s]&&(SKINS[s].limited||SKINS[s].highLegendary||SKINS[s].mythical||SKINS[s].gachaTier==='LEGENDARY'));
+  const defaultDone=(q.defaultPlayTime||0)>=7200; // 7200 frame = 120 detik @ 60fps = 2 menit
+  if(!(skinCount>=15&&fusionCount>=2&&hasLegendary&&defaultDone)){ showMsg('⬛ Belum semua syarat terpenuhi!',2000); return; }
+
+  // Hapus default, tambah ultimate_default
+  save.inventory.skins = save.inventory.skins.filter(function(s){ return s !== 'default' && s !== 'ultimate_default'; });
+  save.inventory.skins.push('ultimate_default');
+  save.inventory.activeSkin = 'ultimate_default';
+  q.unlocked = true;
+  q.everEvolved = true;
+  saveData();
+  typeof refreshMenuUI==='function'&&refreshMenuUI();
+  renderUltimateDefaultEvo();
+
+  // Epic evo visual
+  flashOverlay('rgba(0,0,0,0.7)',300);
+  setTimeout(()=>flashOverlay('rgba(80,80,80,0.5)',500),350);
+  setTimeout(()=>flashOverlay('rgba(200,200,200,0.3)',400),800);
+  SFX.play('skinUnlock');
+  setTimeout(()=>SFX.play('powerup'),700);
+  showMsg('⬛ DEFAULT BEREVOLUSI! ULTIMATE DEFAULT — EPIC! Gudoudama siap!',4000);
+}
+
+// ── Quest tracking: track waktu main dengan skin default (kumulatif) ──
+function questTrackDefaultTime(){
+  if(save.inventory.activeSkin!=='default') return;
+  if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false};
+  if(save.ultimateDefaultQuest.unlocked) return;
+  save.ultimateDefaultQuest.defaultPlayTime=(save.ultimateDefaultQuest.defaultPlayTime||0)+1;
+  if(save.ultimateDefaultQuest.defaultPlayTime%300===0) saveData();
+}
+
+// Kembalikan Ultimate Default → Default biasa
+function revertUltimateDefault(){
+  if(!save.ultimateDefaultQuest) save.ultimateDefaultQuest={defaultPlayTime:0,unlocked:false,everEvolved:false};
+  // Hapus ultimate_default dari inventory
+  save.inventory.skins = save.inventory.skins.filter(s => s !== 'ultimate_default');
+  // Kembalikan default
+  if(!save.inventory.skins.includes('default')) save.inventory.skins.push('default');
+  // Ganti active skin kalau perlu
+  if(save.inventory.activeSkin === 'ultimate_default') save.inventory.activeSkin = 'default';
+  // Set flag: pernah evo, tapi sekarang pakai default lagi
+  save.ultimateDefaultQuest.unlocked = false;
+  save.ultimateDefaultQuest.everEvolved = true;
+  saveData();
+  renderUltimateDefaultEvo();
+  typeof refreshMenuUI === 'function' && refreshMenuUI();
+  showMsg('⬛ Kembali ke Default biasa. Bisa evo lagi kapanpun!', 3000);
+}
+
+// ============================================================
+//  🚀 DEFAULT V2 — EPIC+ V2 SKILLS
+// ============================================================
+
+// Global state
+let dv2Spears=[];        // [{x,y,vx,vy,stuck,stuckMeteor,stuckWall,timer,shooting,shootTimer}]
+let dv2SpearActive=false;
+let dv2SpearTimer=0;
+let dv2PassiveTimer=0;   // countdown 25 detik pasif
+let dv2SpearBullets=[];  // peluru dari tombak yang tertancap
+
+function skillDv2Volley(){
+  if(save.inventory.activeSkin!=='default_v2') return;
+  if(CD.dv2Volley>0){ showMsg(`🚀 CD: ${Math.ceil(CD.dv2Volley/60)}s`,800); return; }
+  CD.dv2Volley=CDMax.dv2Volley;
+  SFX.play('explodeBig');
+  flashOverlay('rgba(180,30,30,0.5)',200);
+  setTimeout(()=>flashOverlay('rgba(180,30,30,0.3)',150),220);
+  showMsg('🚀 BRUTAL VOLLEY!! TEMBAK HABIS!!',2000);
+
+  // 5 gelombang tembakan beruntun, tiap gelombang 12 peluru
+  const waves=5;
+  const bulletsPerWave=12;
+  for(let w=0;w<waves;w++){
+    setTimeout(()=>{
+      SFX.play('explodeSmall');
+      // Spread kerucut ke depan — dari -50 sampai +50 derajat
+      for(let b=0;b<bulletsPerWave;b++){
+        const spread= -50 + (100/(bulletsPerWave-1))*b;
+        const rad=(spread-90)*Math.PI/180;
+        const spd=10+Math.random()*5;
+        dv2SpearBullets.push({
+          x:player.x+(Math.random()-0.5)*10,
+          y:player.y+(Math.random()-0.5)*6,
+          vx:Math.cos(rad)*spd,
+          vy:Math.sin(rad)*spd,
+          r:4+Math.random()*3,
+          life:100, maxLife:100,
+          isBullet:true,
+          color:`rgba(${200+Math.floor(Math.random()*55)},${Math.floor(Math.random()*40)},${Math.floor(Math.random()*20)},0.95)`
+        });
+      }
+      // Partikel ledakan di player
+      for(let p=0;p<10;p++){
+        const a=Math.random()*Math.PI; // hanya ke arah atas
+        particles.push({x:player.x,y:player.y,vx:Math.cos(a)*5,vy:Math.sin(a)*-5,r:3+Math.random()*4,life:18,maxLife:18,color:'rgba(255,80,40,0.9)'});
+      }
+    }, w*80);
+  }
+  updateSkillButtons();
+}
+
+function skillDv2Spear(){
+  if(save.inventory.activeSkin!=='default_v2') return;
+  if(CD.dv2Spear>0){ showMsg(`🚀 CD: ${Math.ceil(CD.dv2Spear/60)}s`,800); return; }
+  if(dv2Spears.length>0){ showMsg('🚀 Tombak masih aktif!',800); return; }
+  CD.dv2Spear=CDMax.dv2Spear;
+  SFX.play('shieldOn');
+  showMsg('🚀 TOMBAK DILEMPAR! Menuju target...',2000);
+  // Lempar 2 tombak ke atas-kiri dan atas-kanan
+  dv2Spears=[
+    {x:player.x-20, y:player.y, vx:-2, vy:-9, stuck:false, stuckMeteor:null, stuckWall:false, timer:0, shooting:false, shootTimer:0},
+    {x:player.x+20, y:player.y, vx:2,  vy:-9, stuck:false, stuckMeteor:null, stuckWall:false, timer:0, shooting:false, shootTimer:0},
+  ];
+  updateSkillButtons();
+}
+
+function updateDv2(){
+  if(save.inventory.activeSkin!=='default_v2') return;
+
+  // ── Pasif: tiap 25 detik ada 10% chance shield ──
+  dv2PassiveTimer++;
+  if(dv2PassiveTimer>=25*60){
+    dv2PassiveTimer=0;
+    if(Math.random()<0.10){
+      shieldActive=true; shieldTimer=600;
+      SFX.play('shieldOn');
+      flashOverlay('rgba(99,102,241,0.35)',400);
+      showMsg('🚀 PASIF! Perisai gratis!',2000);
+    }
+  }
+
+  // ── Update peluru volley ──
+  for(let i=dv2SpearBullets.length-1;i>=0;i--){
+    const b=dv2SpearBullets[i];
+    if(b.isBullet){ b.x+=b.vx; b.y+=b.vy; b.life--; }
+    if(b.life<=0||b.y<-30||b.x<-30||b.x>canvas.width+30){ dv2SpearBullets.splice(i,1); continue; }
+    // Cek hit meteor
+    for(let j=meteors.length-1;j>=0;j--){
+      const m=meteors[j];
+      if(m.type==='proj'||m.type==='proj_blue') continue;
+      if(Math.hypot(b.x-m.x,b.y-m.y)<b.r+m.size){
+        spawnParticles(m.x,m.y,'#f87171',5);
+        ancientFusionTrackMeteorKill(m.type);
+        meteors.splice(j,1); score+=2; save.coins+=2;
+        dv2SpearBullets.splice(i,1); break;
+      }
+    }
+  }
+
+  // ── Update tombak ──
+  for(let i=dv2Spears.length-1;i>=0;i--){
+    const sp=dv2Spears[i];
+    if(sp.stuck){
+      sp.timer++;
+      // Kalau nancap di meteor: kendalikan, berhentikan, tembaki meteor lain
+      if(sp.stuckMeteor){
+        const m=sp.stuckMeteor;
+        m.vx=0; m.vy=0; // meteor berhenti
+        sp.x=m.x; sp.y=m.y;
+        if(sp.timer<=5*60){
+          sp.shootTimer++;
+          if(sp.shootTimer%20===0){
+            // Tembak ke meteor terdekat
+            const targets=meteors.filter(t=>t!==m&&t.type!=='proj'&&t.type!=='proj_blue');
+            if(targets.length>0){
+              const nearest=targets.reduce((a,b)=>Math.hypot(b.x-m.x,b.y-m.y)<Math.hypot(a.x-m.x,a.y-m.y)?b:a);
+              const dx=nearest.x-m.x, dy=nearest.y-m.y, d=Math.hypot(dx,dy)||1;
+              dv2SpearBullets.push({x:m.x,y:m.y,vx:(dx/d)*9,vy:(dy/d)*9,r:5,life:120,maxLife:120,isBullet:true,color:'rgba(200,30,30,0.95)'});
+              SFX.play('explodeSmall');
+            }
+          }
+        } else {
+          // 5 detik selesai — hancurkan meteor yang dikendalikan
+          spawnParticles(m.x,m.y,'#f87171',12);
+          const idx=meteors.indexOf(m); if(idx>-1){ meteors.splice(idx,1); score+=5; save.coins+=5; }
+          dv2Spears.splice(i,1); continue;
+        }
+      }
+      // Kalau nancap di dinding: tembaki semua meteor selama 5 detik
+      if(sp.stuckWall){
+        if(sp.timer<=5*60){
+          sp.shootTimer++;
+          if(sp.shootTimer%15===0){
+            const targets=meteors.filter(t=>t.type!=='proj'&&t.type!=='proj_blue');
+            if(targets.length>0){
+              const t=targets[Math.floor(Math.random()*targets.length)];
+              const dx=t.x-sp.x, dy=t.y-sp.y, d=Math.hypot(dx,dy)||1;
+              dv2SpearBullets.push({x:sp.x,y:sp.y,vx:(dx/d)*10,vy:(dy/d)*10,r:5,life:120,maxLife:120,isBullet:true,color:'rgba(200,30,30,0.95)'});
+            }
+          }
+        } else {
+          dv2Spears.splice(i,1); continue;
+        }
+      }
+      continue;
+    }
+
+    // Tombak masih terbang
+    sp.x+=sp.vx; sp.y+=sp.vy;
+    sp.vy+=0.15; // gravitasi ringan
+
+    // Cek nabrak dinding
+    if(sp.x<10||sp.x>canvas.width-10||sp.y<10){
+      sp.stuck=true; sp.stuckWall=true; sp.vx=0; sp.vy=0;
+      SFX.play('shieldOn');
+      // Cek apakah kedua tombak sudah stuck di dinding
+      const bothWall=dv2Spears.every(s=>s.stuckWall);
+      if(bothWall) showMsg('🚀 Kedua tombak menancap di dinding — menembaki semua meteor!',2500);
+      continue;
+    }
+    // Cek nabrak meteor
+    for(let j=meteors.length-1;j>=0;j--){
+      const m=meteors[j];
+      if(m.type==='proj'||m.type==='proj_blue') continue;
+      if(Math.hypot(sp.x-m.x,sp.y-m.y)<m.size+6){
+        sp.stuck=true; sp.stuckMeteor=m; sp.vx=0; sp.vy=0;
+        SFX.play('shieldOn');
+        showMsg('🚀 Tombak menancap meteor — mengendalikan!',2000);
+        break;
+      }
+    }
+    // Keluar layar bawah
+    if(sp.y>canvas.height+30) dv2Spears.splice(i,1);
+  }
+
+  // ── Update CD ──
+  if(CD.dv2Volley>0) CD.dv2Volley--;
+  if(CD.dv2Spear>0) CD.dv2Spear--;
+}
+
+function drawDv2Spears(){
+  if(dv2Spears.length===0&&dv2SpearBullets.length===0) return;
+  ctx.save();
+  // Gambar peluru volley & tombak
+  for(const b of dv2SpearBullets){
+    ctx.shadowColor='#f87171'; ctx.shadowBlur=10;
+    ctx.fillStyle=b.color;
+    ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+  }
+  for(const sp of dv2Spears){
+    ctx.shadowColor='#cc2222'; ctx.shadowBlur=16;
+    ctx.strokeStyle=sp.stuck?'rgba(255,80,80,0.9)':'rgba(200,30,30,0.9)';
+    ctx.lineWidth=sp.stuck?4:3;
+    const len=sp.stuck?22:18;
+    const angle=sp.stuck?(sp.stuckWall?Math.PI/2:Math.atan2(sp.vy,sp.vx)):Math.atan2(sp.vy,sp.vx);
+    ctx.beginPath();
+    ctx.moveTo(sp.x-Math.cos(angle)*len, sp.y-Math.sin(angle)*len);
+    ctx.lineTo(sp.x+Math.cos(angle)*len, sp.y+Math.sin(angle)*len);
+    ctx.stroke();
+    // Ujung tombak — segitiga
+    ctx.fillStyle='rgba(220,50,50,0.95)';
+    ctx.beginPath();
+    ctx.moveTo(sp.x+Math.cos(angle)*len, sp.y+Math.sin(angle)*len);
+    ctx.lineTo(sp.x+Math.cos(angle+0.5)*(len-8), sp.y+Math.sin(angle+0.5)*(len-8));
+    ctx.lineTo(sp.x+Math.cos(angle-0.5)*(len-8), sp.y+Math.sin(angle-0.5)*(len-8));
+    ctx.closePath(); ctx.fill();
+    // Efek tancap: ring merah kalau stuck
+    if(sp.stuck){
+      const pulse=0.5+0.5*Math.sin(dv2SpearTimer||frame/8);
+      ctx.strokeStyle=`rgba(255,100,100,${0.4+pulse*0.4})`;
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(sp.x,sp.y,14+pulse*4,0,Math.PI*2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+// Quest tracking: level 3 dengan default skin
+function questTrackDv2Level3(){
+  if(!save.defaultV2Quest||!save.defaultV2Quest.started) return;
+  if(save.defaultV2Quest.reachedLv3) return;
+  if(save.inventory.activeSkin!=='default') return;
+  if(currentLevel>=3){
+    save.defaultV2Quest.reachedLv3=true;
+    saveData();
+    showMsg('🚀 Quest Default V2: Level 3 tercapai! ✅',3000);
+  }
+}
+
+// Quest tracking: survive level 2 pakai UD tanpa -nyawa & tanpa item
+let _dv2UDSurviveStartLives=-1;
+let _dv2UDSurviveTracking=false;
+let _dv2UDSurviveFailed=false;
+
+function questTrackDv2UDSurvive(){
+  if(!save.defaultV2Quest||!save.defaultV2Quest.started) return;
+  if(save.defaultV2Quest.surviveUDLv2) return;
+  if(save.inventory.activeSkin!=='ultimate_default') return;
+  if(!gameRunning||gamePaused) return;
+
+  // Mulai tracking saat masuk level 2
+  if(currentLevel===2&&!_dv2UDSurviveTracking&&!_dv2UDSurviveFailed){
+    _dv2UDSurviveTracking=true;
+    _dv2UDSurviveStartLives=player.lives;
+    _dv2UDSurviveFailed=false;
+  }
+
+  // Kalau nyawa berkurang → gagal
+  if(_dv2UDSurviveTracking&&player.lives<_dv2UDSurviveStartLives){
+    _dv2UDSurviveFailed=true;
+    _dv2UDSurviveTracking=false;
+    showMsg('🚀 Quest gagal! Kena hit di Level 2 — coba lagi!',2500);
+  }
+
+  // Selesai level 2 (masuk level 3) tanpa fail
+  if(_dv2UDSurviveTracking&&!_dv2UDSurviveFailed&&currentLevel>=3){
+    save.defaultV2Quest.surviveUDLv2=true;
+    _dv2UDSurviveTracking=false;
+    saveData();
+    showMsg('🚀 Quest Default V2: Survive Level 2 dengan Ultimate Default! ✅',3000);
+  }
+}
+
+// Reset tracking saat game mulai
+function resetDv2QuestTracking(){
+  _dv2UDSurviveStartLives=-1;
+  _dv2UDSurviveTracking=false;
+  _dv2UDSurviveFailed=false;
+}
+
+// ============================================================
+//  🌌 CELESTIAL DEFAULT — HIGH LEGENDARY FUSION SKILLS
+// ============================================================
+
+// Global state
+let cdBurstUsed=0;          // berapa kali S1 dipakai per game (max 5)
+let cdStreakStage=0;         // 0=awal,1=shield,2=doubleshield,3=nyawa,4=skor250,5=skor350
+let cdStreakNewLifeTimer=0;  // timer 30 detik setelah +1 nyawa
+let cdStreakNewLifeGot=false;// flag nyawa baru didapat
+let cdStreakLocked=false;    // skill dikunci sampai double shield hancur
+let cdHypnoMeteors=[];       // meteor yang sudah dihipnotis
+let cdPassiveTimer=0;        // timer pasif 35 detik
+let cdTripleShieldActive=false;
+let cdTripleShieldHits=0;    // 0=triple,1=double,2=single
+
+// ── S1: CELESTIAL BURST ──
+function skillCelestialBurst(){
+  if(save.inventory.activeSkin!=='celestial_default') return;
+  if(cdBurstUsed>=5){ showMsg('🌌 Celestial Burst: Sudah 5x! Nunggu game baru.',2000); return; }
+  if(CD.cdBurst>0){ showMsg(`🌌 CD: ${Math.ceil(CD.cdBurst/60)}s`,800); return; }
+  if(cdStreakLocked){ showMsg('🌌 Skill terkunci! Hancurkan Double Shield dulu.',2000); return; }
+
+  // Kumpulkan semua meteor yang akan dihancurkan
+  const targetsToKill = meteors.filter(m=>m.type!=='proj'&&m.type!=='proj_blue');
+  let killed = 0;
+
+  // Gelombang merah menyebar dari player ke setiap meteor — efek realistis per meteor
+  targetsToKill.forEach((m, idx) => {
+    const delay = idx * 40; // jeda antar meteor biar terasa gelombang menyebar
+    setTimeout(() => {
+      if(!gameRunning) return;
+      // Spawn efek gelombang merah di posisi meteor
+      _spawnCelestialWave(m.x, m.y);
+      // Hapus meteor
+      const mi = meteors.indexOf(m);
+      if(mi > -1){
+        spawnParticles(m.x, m.y, '#ef4444', 6);
+        spawnParticles(m.x, m.y, '#fca5a5', 4);
+        meteors.splice(mi, 1);
+        killed++;
+        score++; save.coins+=2;
+      }
+    }, delay);
+  });
+
+  // Flash merah awal saat skill diaktifkan
+  flashOverlay('rgba(220,38,38,0.35)', 250);
+  setTimeout(()=>flashOverlay('rgba(239,68,68,0.20)', 300), 260);
+
+  CD.cdBurst=CDMax.cdBurst;
+  cdBurstUsed++;
+  SFX.play('explodeBig');
+
+  // Streak logic (pakai total target)
+  const killedCount = targetsToKill.length;
+  setTimeout(()=>{
+    if(killedCount>=10){
+      if(cdStreakStage===0){
+        shieldActive=true; shieldTimer=600; cdStreakStage=1;
+        SFX.play('shieldOn');
+        showMsg(`🌌 CELESTIAL BURST! ${killedCount} meteor dihantam! — Shield didapat! ✨`,3000);
+      } else if(cdStreakStage===1){
+        shieldActive=true; shieldTimer=9999; shieldStack=2; cdStreakStage=2;
+        SFX.play('shieldOn');
+        showMsg(`🌌 CELESTIAL BURST! — DOUBLE SHIELD! ⚔️`,3000);
+      } else if(cdStreakStage===2){
+        player.lives++; updateHUD(); cdStreakStage=3;
+        cdStreakNewLifeTimer=30*60; cdStreakNewLifeGot=true;
+        SFX.play('powerup');
+        showMsg(`🌌 CELESTIAL BURST! — +1 NYAWA! ❤️`,3000);
+      } else if(cdStreakStage===3){
+        score+=250; cdStreakStage=4;
+        showMsg(`🌌 CELESTIAL BURST! — +250 SKOR! 🌟`,3000);
+      } else if(cdStreakStage===4){
+        score+=350; cdStreakStage=5; cdStreakLocked=true;
+        showMsg(`🌌 CELESTIAL BURST! — +350 SKOR! Skill dikunci sampai Double Shield hancur!`,3500);
+      }
+    } else {
+      showMsg(`🌌 CELESTIAL BURST! ${killedCount} meteor dihantam! (Butuh 10+ untuk streak)`,2000);
+    }
+    updateHUD(); updateSkillButtons();
+  }, targetsToKill.length * 40 + 100);
+}
+
+// Spawn efek gelombang merah di posisi meteor — visual Celestial Burst
+function _spawnCelestialWave(wx, wy){
+  if(!window._cdWaves) window._cdWaves=[];
+  window._cdWaves.push({x:wx, y:wy, r:0, maxR:60, alpha:0.85, life:18, maxLife:18});
+}
+
+// Draw gelombang merah Celestial (dipanggil dari game loop)
+function drawCelestialWaves(){
+  if(!window._cdWaves || window._cdWaves.length===0) return;
+  for(let i=window._cdWaves.length-1;i>=0;i--){
+    const w=window._cdWaves[i];
+    w.r += (w.maxR - w.r) * 0.22;
+    w.life--;
+    w.alpha = (w.life/w.maxLife)*0.85;
+    if(w.life<=0){ window._cdWaves.splice(i,1); continue; }
+    ctx.save();
+    ctx.globalAlpha=w.alpha;
+    ctx.strokeStyle='#ef4444';
+    ctx.shadowColor='#dc2626'; ctx.shadowBlur=18;
+    ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(w.x, w.y, w.r, 0, Math.PI*2); ctx.stroke();
+    // Ring dalam lebih terang
+    ctx.strokeStyle='rgba(255,150,150,0.7)';
+    ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.arc(w.x, w.y, w.r*0.55, 0, Math.PI*2); ctx.stroke();
+    ctx.restore();
+  }
+}
+
+// ── S2: HYPNO WAVE ──
+function skillCelestialHypno(){
+  if(save.inventory.activeSkin!=='celestial_default') return;
+  if(CD.cdHypno>0){ showMsg(`🌌 CD Hypno: ${Math.ceil(CD.cdHypno/60)}s`,800); return; }
+  CD.cdHypno=CDMax.cdHypno;
+  SFX.play('ghostOn');
+
+  // Efek jantung berdetak 2 detik sebelum skill aktif
+  _startCelestialHeartbeat(()=>{
+    // Skill aktif setelah heartbeat selesai
+    flashOverlay('rgba(167,139,250,0.4)',500);
+    showMsg('🌌 HYPNO WAVE! Meteor jadi temanmu 7 detik!',2500);
+    let count=0;
+    for(const m of meteors){
+      if(m.type==='proj'||m.type==='proj_blue'||m._hypno) continue;
+      m._hypno=true;
+      m._hypnoTimer=7*60;
+      save.coins+=50;
+      count++;
+    }
+    showMsg(`🌌 HYPNO WAVE! ${count} meteor dihipnotis! +${count*50} koin!`,3000);
+    updateSkillButtons();
+  });
+}
+
+// Efek heartbeat layar merah transparan — 2 detik, lalu callback
+let _cdHeartbeatActive=false;
+function _startCelestialHeartbeat(onDone){
+  if(_cdHeartbeatActive) return;
+  _cdHeartbeatActive=true;
+  window._cdHeartbeatPhase=0;
+  window._cdHeartbeatTimer=0;
+  window._cdHeartbeatDone=onDone;
+  showMsg('💗 ...',600);
+}
+
+// Dipanggil tiap frame dari updateCelestialDefault
+function _updateCelestialHeartbeat(){
+  if(!_cdHeartbeatActive) return;
+  window._cdHeartbeatTimer++;
+  const t=window._cdHeartbeatTimer;
+
+  // Detak 1 — frame 0-15
+  if(t===1)  _cdFlashHeart(0.30, 120);
+  // Detak 2 — frame 25-40
+  if(t===25) _cdFlashHeart(0.42, 130);
+  // Detak 3 lebih kencang — frame 50-70
+  if(t===50) _cdFlashHeart(0.55, 150);
+  // Detak 4 PUNCAK — frame 72-90
+  if(t===72) _cdFlashHeart(0.70, 160);
+
+  // Selesai di frame 115 (~2 detik @ 60fps)
+  if(t>=115){
+    _cdHeartbeatActive=false;
+    window._cdHeartbeatTimer=0;
+    if(window._cdHeartbeatDone) window._cdHeartbeatDone();
+    window._cdHeartbeatDone=null;
+  }
+}
+
+function _cdFlashHeart(alpha, sfxFreq){
+  // Flash layar merah transparan
+  const ol=document.createElement('div');
+  ol.style.cssText=`position:fixed;inset:0;z-index:9998;pointer-events:none;background:rgba(180,0,0,${alpha});transition:opacity 0.18s;`;
+  document.body.appendChild(ol);
+  setTimeout(()=>{ ol.style.opacity='0'; setTimeout(()=>ol.remove(),200); },180);
+  // Suara detak jantung via SFX
+  try{
+    if(SFX&&SFX.ctx){
+      const c=SFX.ctx;
+      const o=c.createOscillator(), g=c.createGain();
+      o.type='sine'; o.frequency.value=sfxFreq||120;
+      g.gain.setValueAtTime(1.0,c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.18);
+      o.connect(g); g.connect(c.destination);
+      o.start(); o.stop(c.currentTime+0.22);
+    }
+  } catch(e){}
+}
+
+// ── Update Celestial Default per frame ──
+function updateCelestialDefault(){
+  if(save.inventory.activeSkin!=='celestial_default') return;
+
+  // Heartbeat effect update
+  _updateCelestialHeartbeat();
+
+  // Timer nyawa baru 30 detik
+  if(cdStreakNewLifeGot && cdStreakNewLifeTimer>0){
+    cdStreakNewLifeTimer--;
+    if(cdStreakNewLifeTimer<=0) cdStreakNewLifeGot=false;
+  }
+
+  // Pasif Triple Shield — tiap 35 detik 5% chance
+  cdPassiveTimer++;
+  if(cdPassiveTimer>=35*60){
+    cdPassiveTimer=0;
+    if(Math.random()<0.05 && !cdTripleShieldActive && !shieldActive){
+      cdTripleShieldActive=true;
+      cdTripleShieldHits=0;
+      SFX.play('shieldOn');
+      flashOverlay('rgba(129,140,248,0.4)',500);
+      showMsg('🌌 PASIF! TRIPLE SHIELD aktif! 3 ring pelindung!',3000);
+    }
+  }
+
+  // Update hypno meteors — mereka kejar & hancurkan meteor lain
+  for(let i=cdHypnoMeteors.length-1;i>=0;i--){
+    const hm=cdHypnoMeteors[i];
+    if(!meteors.includes(hm)||hm._hypnoTimer<=0){
+      cdHypnoMeteors.splice(i,1); continue;
+    }
+  }
+  for(let i=meteors.length-1;i>=0;i--){
+    const m=meteors[i];
+    if(!m._hypno) continue;
+    m._hypnoTimer--;
+    if(m._hypnoTimer<=0){
+      m._hypno=false;
+      // Meteor hipnotis habis masa aktif — hancurkan
+      spawnParticles(m.x,m.y,'#a78bfa',6);
+      meteors.splice(i,1); continue;
+    }
+    // Kejar meteor terdekat yang bukan hipnotis
+    const targets=meteors.filter(t=>!t._hypno&&t.type!=='proj'&&t.type!=='proj_blue');
+    if(targets.length>0){
+      const nearest=targets.reduce((a,b)=>Math.hypot(b.x-m.x,b.y-m.y)<Math.hypot(a.x-m.x,a.y-m.y)?b:a);
+      const dx=nearest.x-m.x, dy=nearest.y-m.y, d=Math.hypot(dx,dy)||1;
+      m.vx=(dx/d)*3.5; m.vy=(dy/d)*3.5;
+      // Cek hit
+      if(d<m.size+nearest.size){
+        spawnParticles(nearest.x,nearest.y,'#c4b5fd',8);
+        score+=50; save.coins+=10;
+        const ti=meteors.indexOf(nearest);
+        if(ti>-1) meteors.splice(ti,1);
+        showMsg('+50 skor! Meteor hipnotis menghancurkan musuh!',800);
+      }
+    }
+    // Warna override — ungu
+    m._hypnoColor='rgba(167,139,250,0.85)';
+  }
+
+  // CD countdown
+  if(CD.cdBurst>0) CD.cdBurst--;
+  if(CD.cdHypno>0) CD.cdHypno--;
+}
+
+// Hook ke handleHit — cek triple shield & streak double shield hancur
+function celestialHandleHit(){
+  if(save.inventory.activeSkin!=='celestial_default') return false;
+
+  // Triple shield absorb
+  if(cdTripleShieldActive){
+    cdTripleShieldHits++;
+    SFX.play('shieldOn');
+    if(cdTripleShieldHits>=3){
+      cdTripleShieldActive=false;
+      showMsg('🌌 Triple Shield hancur total!',2000);
+    } else {
+      showMsg(`🌌 Triple Shield kena! Sisa ${3-cdTripleShieldHits} ring`,1500);
+    }
+    invincibleTimer=60;
+    return true; // absorb hit
+  }
+
+  // Double shield hancur → cek streak
+  if(cdStreakStage===2 && shieldStack>=2){
+    shieldStack=1; // turun ke single shield
+    cdStreakStage=1; // kembali ke stage shield
+    showMsg('🌌 Double Shield hancur — kembali ke Shield. Streak ke Double Shield lagi!',2500);
+    return false;
+  }
+
+  // Streak stage 5 locked — double shield hancur
+  if(cdStreakLocked){
+    cdStreakLocked=false;
+    cdStreakStage=0;
+    showMsg('🌌 Streak reset! Bisa pakai Celestial Burst lagi.',2000);
+    return false;
+  }
+
+  // Nyawa baru kena hit < 30 detik
+  if(cdStreakStage===3 && cdStreakNewLifeGot && cdStreakNewLifeTimer>0){
+    cdStreakNewLifeGot=false;
+    cdStreakNewLifeTimer=0;
+    // Streak gak lanjut — nunggu double shield hancur
+    showMsg('🌌 Nyawa baru kena hit < 30 detik! Selesaikan Double Shield dulu.',2500);
+    return false;
+  }
+
+  return false;
+}
+
+// Quest tracking celestial_default
+let _cdLv4NoHitFailed=false, _cdLv4NoHitTracking=false;
+function questTrackCelestialLv4NoHit(){
+  if(!save.celestialQuest) save.celestialQuest={meteorCount:0,dv2Minutes:0,udMinutes:0,reachedLv4NoHit:false};
+  if(save.celestialQuest.reachedLv4NoHit) return;
+  if(!gameRunning||gamePaused) return;
+  if(currentLevel===1&&!_cdLv4NoHitTracking){ _cdLv4NoHitTracking=true; _cdLv4NoHitFailed=false; }
+  if(_cdLv4NoHitFailed) return;
+  if(currentLevel>=4&&_cdLv4NoHitTracking&&!_cdLv4NoHitFailed){
+    save.celestialQuest.reachedLv4NoHit=true;
+    _cdLv4NoHitTracking=false;
+    saveData();
+    showMsg('🌌 Quest Celestial: Level 4 tanpa hit! ✅',3000);
+  }
+}
+function questCelestialHitFail(){
+  if(!save.celestialQuest||save.celestialQuest.reachedLv4NoHit) return;
+  if(_cdLv4NoHitTracking) _cdLv4NoHitFailed=true;
+}
+function questTrackCelestialPlaytime(){
+  if(!save.celestialQuest) save.celestialQuest={meteorCount:0,dv2Minutes:0,udMinutes:0,reachedLv4NoHit:false};
+  if(!gameRunning||gamePaused) return;
+  const skin=save.inventory.activeSkin;
+  if(skin==='default_v2' && (save.celestialQuest.dv2Minutes||0)<120){
+    save.celestialQuest.dv2Minutes=(save.celestialQuest.dv2Minutes||0)+1;
+    if(save.celestialQuest.dv2Minutes>=120) showMsg('🌌 Quest Celestial: 2 menit Default V2 ✅',3000);
+  }
+  if(skin==='ultimate_default' && (save.celestialQuest.udMinutes||0)<120){
+    save.celestialQuest.udMinutes=(save.celestialQuest.udMinutes||0)+1;
+    if(save.celestialQuest.udMinutes>=120) showMsg('🌌 Quest Celestial: 2 menit Ultimate Default ✅',3000);
+  }
+}
+
 // ── Quest tracking helpers ──
+
+// ── Ancient Fusion — track homing meteor kill ──
+function ancientFusionTrackMeteorKill(meteorType){
+  if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+  if(save.ancientFusion.completed) return;
+  if(meteorType!=='homing_meteor') return;
+  if((save.ancientFusion.meteorKills||0)>=5) return;
+  save.ancientFusion.meteorKills=(save.ancientFusion.meteorKills||0)+1;
+  if(save.ancientFusion.meteorKills%1===0) saveData();
+  showMsg(`🏺 Meteor Incar dihancurkan! ${save.ancientFusion.meteorKills}/5`,1500);
+}
+
+// Cek syarat Ancient Fusion
+function checkAncientFusionReady(){
+  if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+  const af=save.ancientFusion;
+  const skins=save.inventory.skins||[];
+  // Boss level 5
+  const bossOk=(save.bossHighest||0)>=5;
+  // 3 legendary (limited = legendary)
+  const legendaryCount=skins.filter(s=>SKINS[s]&&(SKINS[s].limited||SKINS[s].highLegendary||SKINS[s].mythical)).length;
+  const legendaryOk=legendaryCount>=3;
+  // 3 fusion
+  const fusionCount=skins.filter(s=>SKINS[s]&&(SKINS[s].fusion||SKINS[s].isFusion)).length;
+  const fusionOk=fusionCount>=3;
+  // 5 meteor incar
+  const meteorOk=(af.meteorKills||0)>=5;
+  // Easter egg
+  const eggOk=af.easterEggFound||false;
+  return {bossOk,legendaryOk,legendaryCount,fusionOk,fusionCount,meteorOk,eggOk,
+    allOk:bossOk&&legendaryOk&&fusionOk&&meteorOk&&eggOk};
+}
+
 var _rnPlaySecs=0;
 function questTrackRinneganTime(){
   if(!save.rinneganQuest||!save.rinneganQuest.started) return;
@@ -38818,6 +40762,144 @@ function completeCheckpointQuest(){
 }
 
 /* ── Render quest CheckPoint di tab Misi ── */
+function renderAncientFusionQuestCard(list){
+  if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+  const af=save.ancientFusion;
+  const info=checkAncientFusionReady();
+  const done=af.completed;
+
+  const d=document.createElement('div');
+  d.className='inv-misi-card'+(done?' done-misi':info.allOk?' active-misi':'');
+
+  const syaratRows=`
+    <div style="font-size:0.75rem;color:${info.bossOk?'#4ade80':'rgba(255,255,255,0.4)'};margin-top:4px;">${info.bossOk?'✅':'❌'} Kalahkan Boss Level 5 (Tertinggi: ${save.bossHighest||0}/5)</div>
+    <div style="font-size:0.75rem;color:${info.legendaryOk?'#4ade80':'rgba(255,255,255,0.4)'};">${info.legendaryOk?'✅':'❌'} Miliki 3 Skin Legendary (Punya: ${info.legendaryCount}/3)</div>
+    <div style="font-size:0.75rem;color:${info.fusionOk?'#4ade80':'rgba(255,255,255,0.4)'};">${info.fusionOk?'✅':'❌'} Unlock 3 Skin Fusion (Punya: ${info.fusionCount}/3)</div>
+    <div style="font-size:0.75rem;color:${info.meteorOk?'#4ade80':'rgba(255,255,255,0.4)'};">${info.meteorOk?'✅':'❌'} Hancurkan 5 Meteor Incar/Homing (${Math.min(af.meteorKills||0,5)}/5 — bisa dicicil)</div>
+    <div style="font-size:0.75rem;color:${info.eggOk?'#4ade80':'rgba(255,255,255,0.4)'};">${info.eggOk?'✅':'❌'} Temukan Easter Egg Ahmad Ramadhan (klik judul game 3x)</div>
+  `;
+
+  if(done){
+    d.innerHTML=`
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:2rem;">🏺</div>
+        <div style="flex:1;">
+          <div class="inv-misi-title" style="color:#fbbf24;">Ancient Fusion</div>
+          <div class="inv-misi-desc">Item langka telah diklaim. Tersimpan permanen di inventorymu.</div>
+        </div>
+        <span style="font-size:1.5rem;">✅</span>
+      </div>
+      <div style="font-size:0.78rem;color:#fbbf24;font-weight:700;margin-top:6px;">🏺 PERMANENT — Ancient Fusion dimiliki</div>`;
+  } else {
+    d.innerHTML=`
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:2rem;">🏺</div>
+        <div style="flex:1;">
+          <div class="inv-misi-title" style="color:#fbbf24;">Misi: Dapatkan Ancient Fusion</div>
+          <div class="inv-misi-desc">Item legendaris yang hanya bisa didapat sekali seumur hidup. Selesaikan semua syarat berikut.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px;margin-top:6px;">
+        ${syaratRows}
+      </div>
+      <div style="font-size:0.68rem;color:rgba(255,255,255,0.25);margin-top:4px;">Hanya bisa diselesaikan 1x — PERMANENT setelah diklaim.</div>
+      ${info.allOk
+        ? `<button onclick="claimAncientFusion()" style="margin-top:10px;width:100%;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,#92400e,#fbbf24,#d97706);color:#000;font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;cursor:pointer;animation:shimmer 2s linear infinite;background-size:200% auto;">🏺 KLAIM ANCIENT FUSION</button>`
+        : `<div style="margin-top:8px;font-size:0.75rem;color:rgba(255,255,255,0.3);">Penuhi semua syarat untuk mengklaim item ini.</div>`
+      }`;
+  }
+  list.appendChild(d);
+}
+
+function claimAncientFusion(){
+  if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+  const info=checkAncientFusionReady();
+  if(!info.allOk){ showMsg('❌ Belum semua syarat terpenuhi!',2000); return; }
+  if(save.ancientFusion.completed){ showMsg('✅ Ancient Fusion sudah diklaim!',2000); return; }
+
+  save.ancientFusion.completed=true;
+  // Tambah ke inventory items sebagai permanent
+  if(!save.inventory.items) save.inventory.items=[];
+  save.inventory.items.push('ancient_fusion');
+  saveData();
+
+  flashOverlay('rgba(251,191,36,0.6)',400);
+  setTimeout(()=>flashOverlay('rgba(251,191,36,0.3)',600),450);
+  SFX.play('skinUnlock');
+  setTimeout(()=>SFX.play('powerup'),700);
+  showMsg('🏺 ANCIENT FUSION DIKLAIM! Item langka kini milikmu — PERMANENT!',5000);
+  renderInventory();
+}
+
+function renderAncientFusionCard(list){
+  if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+  const af=save.ancientFusion;
+  const info=checkAncientFusionReady();
+  const done=af.completed;
+
+  const d=document.createElement('div');
+  d.className='inv-misi-card'+(done?' done-misi':info.allOk?' active-misi':'');
+
+  const rows=[
+    {icon:'⚔️', label:'Kalahkan Boss di Level 5', done:info.bossOk, detail:`Boss tertinggi: Level ${save.bossHighest||0}/5`},
+    {icon:'👑', label:'Punya minimal 3 Skin Legendary', done:info.legendaryOk, detail:`${info.legendaryCount}/3 Legendary dimiliki`},
+    {icon:'🔬', label:'Unlock 3 Skin Fusion', done:info.fusionOk, detail:`${info.fusionCount}/3 Fusion dimiliki`},
+    {icon:'🎯', label:'Hancurkan 5 Meteor Incar (Homing)', done:info.meteorOk, detail:`${Math.min(af.meteorKills||0,5)}/5 hancur (bisa dicicil)`},
+    {icon:'🏺', label:'Temukan Easter Egg Ahmad Ramadhan', done:info.eggOk, detail:info.eggOk?'✅ Easter Egg ditemukan!':'Klik judul METEOR RUSH 3x di menu utama'},
+  ];
+
+  const rowsHtml=rows.map(r=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+      <span style="font-size:1.1rem;">${r.done?'✅':r.icon}</span>
+      <div style="flex:1;">
+        <div style="font-size:0.78rem;color:${r.done?'#4ade80':'rgba(255,255,255,0.6)'};">${r.label}</div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.3);">${r.detail}</div>
+      </div>
+    </div>`).join('');
+
+  let actionHtml='';
+  if(done){
+    actionHtml=`<div style="font-size:0.82rem;color:#f59e0b;font-weight:700;margin-top:8px;">✅ SELESAI — Ancient Fusion sudah di inventory (PERMANENT)</div>`;
+  } else if(info.allOk){
+    actionHtml=`<button onclick="claimAncientFusion()" style="margin-top:10px;width:100%;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,#92400e,#d97706,#fbbf24);color:#fff;font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;cursor:pointer;animation:titlePulse 1.5s infinite;">🏺 KLAIM — Ancient Fusion!</button>`;
+  } else {
+    actionHtml=`<div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:8px;">Selesaikan semua syarat untuk mengklaim item Ancient Fusion.</div>`;
+  }
+
+  d.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div style="font-size:2.2rem;">🏺</div>
+      <div style="flex:1;">
+        <div class="inv-misi-title" style="color:#f59e0b;font-size:0.95rem;">Ancient Fusion</div>
+        <div class="inv-misi-desc">Item legendaris — selesaikan semua syarat untuk mendapatkannya. Hanya bisa diklaim 1 kali!</div>
+      </div>
+      ${done?'<span style="font-size:1.5rem;">✅</span>':''}
+    </div>
+    ${rowsHtml}
+    ${actionHtml}`;
+  list.appendChild(d);
+}
+
+function claimAncientFusion(){
+  if(!save.ancientFusion) save.ancientFusion={meteorKills:0,easterEggFound:false,completed:false};
+  const info=checkAncientFusionReady();
+  if(!info.allOk){ showMsg('❌ Belum semua syarat terpenuhi!',2000); return; }
+  if(save.ancientFusion.completed){ showMsg('✅ Ancient Fusion sudah diklaim!',2000); return; }
+
+  save.ancientFusion.completed=true;
+  // Tambah ke inventory items
+  if(!save.inventory.items) save.inventory.items=[];
+  save.inventory.items.push('ancient_fusion');
+  saveData();
+
+  SFX.play('skinUnlock');
+  setTimeout(()=>SFX.play('powerup'),600);
+  flashOverlay('rgba(245,158,11,0.5)',400);
+  setTimeout(()=>flashOverlay('rgba(251,191,36,0.3)',500),450);
+  showMsg('🏺 ANCIENT FUSION DIDAPAT! Item langka tersimpan permanent di inventory!',4500);
+  renderInventory();
+}
+
 function renderCheckpointQuestCard(list){
   const info = getCheckpointQuestInfo();
   const now = Date.now();
