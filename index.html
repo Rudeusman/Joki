@@ -23317,6 +23317,7 @@ function skillVioletLaser(){
     }
   }
   if(levelBossActive && Math.abs(levelBossX-beamX)<80) hitLevelBoss();
+  if(finalBossActive && Math.abs(finalBossX-beamX)<80) hitFinalBoss(2);
 
   violetLaserBeams.push(beam);
   violetShotsLeft--;
@@ -23687,6 +23688,10 @@ function updateDarkSpirit(){
       dsShadowBullets.splice(i,1);
       hitLevelBoss();
     }
+    if(finalBossActive && Math.hypot(b.x-finalBossX, b.y-finalBossY)<60+b.size){
+      dsShadowBullets.splice(i,1);
+      hitFinalBoss(1);
+    }
   }
 }
 
@@ -24002,6 +24007,10 @@ function updateGodSun(){
     const bbd=Math.sqrt((levelBossX-cx)**2+(levelBossY-cy)**2);
     if(bbd<heatRadius) hitLevelBoss();
   }
+  if(finalBossActive && frame%30===0){
+    const fbbd=Math.sqrt((finalBossX-cx)**2+(finalBossY-cy)**2);
+    if(fbbd<heatRadius) hitFinalBoss(2);
+  }
   for(let i=meteors.length-1;i>=0;i--){
     const m=meteors[i]; if(m.type==='proj'||m.type==='proj_blue') continue;
     const dx=m.x-cx, dy=m.y-cy, dd=Math.sqrt(dx*dx+dy*dy);
@@ -24095,6 +24104,10 @@ function updateGodBigBang(){
       const bd=Math.sqrt((levelBossX-cx)**2+(levelBossY-cy)**2);
       if(bd<godBigBangRadius){ hitLevelBoss(); hitLevelBoss(); hitLevelBoss(); }
     }
+    if(finalBossActive){
+      const fbd=Math.sqrt((finalBossX-cx)**2+(finalBossY-cy)**2);
+      if(fbd<godBigBangRadius) hitFinalBoss(3);
+    }
     if(bossActive){ bossHP-=3; spawnParticles(canvas.width/2,80,'#818cf8',4); }
   } else {
     // Selesai
@@ -24155,6 +24168,14 @@ function updateGodGoldRain(){
       if(bd<44+gm.size){
         spawnParticles(levelBossX,levelBossY,'#fbbf24',8);
         hitLevelBoss(); hitLevelBoss(); hitLevelBoss(); // meteor emas = 3 damage
+        godGoldMeteors.splice(i,1); continue;
+      }
+    }
+    if(finalBossActive){
+      const fbd=Math.sqrt((gm.x-finalBossX)**2+(gm.y-finalBossY)**2);
+      if(fbd<60+gm.size){
+        spawnParticles(finalBossX,finalBossY,'#fbbf24',8);
+        hitFinalBoss(3);
         godGoldMeteors.splice(i,1); continue;
       }
     }
@@ -24228,6 +24249,7 @@ function updateMcTNTs(){
         }
       }
       if(levelBossActive){ const bd=Math.sqrt((t.x-levelBossX)**2+(t.y-levelBossY)**2); if(bd<80){ hitLevelBoss(); hitLevelBoss(); } }
+      if(finalBossActive){ const fbd=Math.sqrt((t.x-finalBossX)**2+(t.y-finalBossY)**2); if(fbd<80){ hitFinalBoss(2); } }
       // Draw explosion
       ctx.save();
       const ep=t.explodeTimer/18;
@@ -24317,6 +24339,9 @@ function updateMcDragon(){
   }
   if(levelBossActive && Math.abs(levelBossX-mcDragonX)<hitW && Math.abs(levelBossY-mcDragonY)<hitH){
     hitLevelBoss(); hitLevelBoss(); hitLevelBoss(); hitLevelBoss();
+  }
+  if(finalBossActive && Math.abs(finalBossX-mcDragonX)<hitW && Math.abs(finalBossY-mcDragonY)<hitH){
+    hitFinalBoss(4);
   }
 
   // === DRAW ENDER DRAGON BESAR ===
@@ -24789,6 +24814,13 @@ function drawGodDrones(){
     if(d.fireTimer>=90){
       d.fireTimer=0;
       const near=meteors.filter(m=>m.type!=='proj'&&m.type!=='proj_blue');
+      // Drone juga serang boss langsung kalau aktif
+      if(levelBossActive && Math.hypot(levelBossX-dx,levelBossY-dy)<200){
+        hitLevelBoss();
+      }
+      if(finalBossActive && Math.hypot(finalBossX-dx,finalBossY-dy)<200){
+        hitFinalBoss(1);
+      }
       if(near.length>0){
         const target=near[Math.floor(Math.random()*near.length)];
         const angle2=Math.atan2(target.y-dy,target.x-dx);
@@ -40045,6 +40077,19 @@ function skillSamuraiTebas(){
       }
     }
   });
+  // Boss hit — tiap slash mengenai boss
+  if(levelBossActive || finalBossActive){
+    angles.forEach(ang=>{
+      const slashDx=Math.sin(ang), slashDy=-Math.cos(ang);
+      const dbx=levelBossActive?levelBossX:finalBossX;
+      const dby=levelBossActive?levelBossY:finalBossY;
+      const dx2=dbx-player.x, dy2=dby-player.y;
+      if(dy2>0) return;
+      const cross=Math.abs(dx2*slashDy - dy2*slashDx);
+      if(cross<80) hitBoss(3,'#e2e8f0');
+    });
+  }
+
   // Partikel ledakan dari player
   for(let i=0;i<3;i++) spawnParticles(player.x,player.y-player.size,'#e2e8f0',4);
   if(hit>0) showMsg(`⚔️ TEBAS TIGA! ${hit} meteor hancur!`,1400);
@@ -40143,6 +40188,9 @@ function updateKazegiri(){
         meteors.splice(i,1);
       }
     }
+    // Hit boss
+    if(levelBossActive && Math.hypot(levelBossX-bx,levelBossY-by)<60) hitLevelBoss();
+    if(finalBossActive && Math.hypot(finalBossX-bx,finalBossY-by)<70) hitFinalBoss(1);
   }
 
   if(!anyAlive) kzActive=false;
@@ -40278,6 +40326,9 @@ function updateSamurai(){
           meteors.splice(i,1);
         }
       }
+      // Hit boss saat dash melewati area boss
+      if(levelBossActive && Math.hypot(levelBossX-player.x,levelBossY-player.y)<slashRadius+60 && frame%4===0) hitLevelBoss();
+      if(finalBossActive && Math.hypot(finalBossX-player.x,finalBossY-player.y)<slashRadius+70 && frame%4===0) hitFinalBoss(2);
 
       // Cek apakah sudah sampai waypoint
       if(Math.hypot(dx,dy)<dashSpd+5){
@@ -40303,6 +40354,9 @@ function updateSamurai(){
               save.coins+=10; score+=3; remaining++;
               meteors.splice(i,1);
             }
+            // Sengoku finale juga hit boss
+            if(levelBossActive){ for(let i=0;i<10;i++) hitLevelBoss(); }
+            if(finalBossActive) hitFinalBoss(10);
             // Bonus koin 300-600
             const bonus=300+Math.floor(Math.random()*301);
             save.coins+=bonus;
